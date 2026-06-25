@@ -1,6 +1,7 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED =
   "0";
 
+import { APP_URL } from "@/shared/constants/apiConstants";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -29,7 +30,7 @@ export async function POST() {
 
     const response =
       await fetch(
-        "https://localhost:5001/api/v1/auth/refresh",
+        `${APP_URL}/auth/refresh`,
         {
           method: "POST",
 

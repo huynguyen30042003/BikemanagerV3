@@ -1,3 +1,4 @@
+import { APP_URL } from "@/shared/constants/apiConstants";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -6,7 +7,7 @@ const nextConfig: NextConfig = {
       {
         source: "/api/:path*",
         destination:
-          "https://localhost:5001/api/v1/:path*",
+          `${APP_URL}/:path*`,
       },
     ];
   },

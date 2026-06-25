@@ -1,4 +1,5 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+import { APP_URL } from "@/shared/constants/apiConstants";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -6,7 +7,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     // gọi Orchard API
-    const response = await fetch("https://localhost:5001/api/v1/auth/login", {
+    const response = await fetch(`${APP_URL}/auth/login`, {
       method: "POST",
 
       headers: {

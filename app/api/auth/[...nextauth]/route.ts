@@ -1,3 +1,4 @@
+import { BE_URL } from "@/shared/constants/apiConstants";
 import NextAuth from "next-auth";
 
 const handler = NextAuth({
@@ -9,10 +10,10 @@ const handler = NextAuth({
 
 			clientId: "nextjs-client",
 
-			issuer: "https://localhost:5001",
+			issuer: BE_URL,
 
 			wellKnown:
-				"https://localhost:5001/.well-known/openid-configuration",
+				`${BE_URL}/.well-known/openid-configuration`,
 
 			authorization: {
 				params: {

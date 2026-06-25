@@ -33,6 +33,7 @@ import { useDebounceSearch } from "@/hooks/useDebounceSearch";
 import { Column, Table } from "@/components/ui/Table";
 import { Image } from "@/components/ui/image";
 import { CategoryDto } from "@/types/product/category";
+import { BE_URL } from "@/shared/constants/apiConstants";
 
 export default function ProductsPage() {
   const router = useRouter();
@@ -77,7 +78,7 @@ export default function ProductsPage() {
       title: "Ảnh",
       render: (val) =>
         val ? (
-          <Image src={`https://localhost:5001${val}`} alt="thumb" className="h-10 w-10 rounded object-cover" />
+          <Image src={`${BE_URL}/${val}`} alt="thumb" className="h-10 w-10 rounded object-cover" />
         ) : (
           <div className="h-10 w-10 rounded bg-muted" />
         ),

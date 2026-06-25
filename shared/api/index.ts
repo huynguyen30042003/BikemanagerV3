@@ -3,8 +3,7 @@ import axios, {
   AxiosInstance,
   InternalAxiosRequestConfig,
 } from "axios";
-
-const APP_URL = "https://localhost:5001";
+import { BE_URL } from "../constants/apiConstants";
 
 interface FailedQueueItem {
   resolve: (token: string) => void;
@@ -23,7 +22,7 @@ class Api {
 
   constructor() {
     this.instance = axios.create({
-      baseURL: APP_URL,
+      baseURL: BE_URL,
       headers: {
         "Content-Type": "application/json",
       },

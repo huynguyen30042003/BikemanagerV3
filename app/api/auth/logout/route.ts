@@ -1,10 +1,11 @@
 
+import { APP_URL } from "@/shared/constants/apiConstants";
 import { NextResponse } from "next/server";
 
 export async function POST() {
   try {
     const response = await fetch(
-      "https://localhost:5001/api/v1/auth/logout",
+      `${APP_URL}/auth/logout`,
       {
         method: "POST",
 

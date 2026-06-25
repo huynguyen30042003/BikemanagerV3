@@ -34,6 +34,7 @@ import { Image } from "@/components/ui/image";
 import { CategoryDto } from "@/types/product/category";
 import { brandRes } from "@/types/product/brand";
 import { PRODUCT_TYPES, ProductType } from "@/types/product/product";
+import { BE_URL } from "@/shared/constants/apiConstants";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -135,7 +136,7 @@ function EditProductForm({
 }) {
   const router = useRouter();
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(
-    `https://localhost:5001${product.thumbnailUrl}`,
+    `${BE_URL}/${product.thumbnailUrl}`,
   );
 
   const { mutateAsync: updateProduct, isPending } = useUpdateProduct();
