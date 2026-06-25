@@ -29,7 +29,7 @@ export interface CreateProductRequest {
   shortDescription?: string | null;
   description?: string | null;
   thumbnail?: File | null;
-  productType: ProductType;
+  productType: string;
   isPublished: boolean;
 }
 export interface Variant {
@@ -39,7 +39,7 @@ export interface Variant {
   sellingPrice?: number;
   stockQuantity?: number;
 }
-export interface sUpdateProductRequest extends CreateProductRequest {
+export interface UpdateProductRequest extends CreateProductRequest {
   id: string;
 }
 

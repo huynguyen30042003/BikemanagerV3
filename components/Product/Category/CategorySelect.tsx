@@ -13,7 +13,9 @@ import { cn } from "@/lib/utils";
 import { CategoryDto } from "@/types/product/category";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type CategoryNode = CategoryDto & { children: CategoryNode[] };
+type CategoryNode = Omit<CategoryDto, "children"> & {
+  children: CategoryNode[];
+};
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const filterNodes = (nodes: CategoryDto[], keyword: string): CategoryNode[] => {
@@ -105,11 +107,11 @@ function CategoryOption({
 
       {/* children */}
       {hasChildren && isExpanded && (
-        <div className="border-l border-border ml-[18px]">
+        <div className="border-l border-border ml-4.5">
           {node.children.map((child) => (
             <CategoryOption
               key={child.id}
-              node={child}
+              node={child ?? undefined}
               level={level + 1}
               selectedId={selectedId}
               expandedIds={expandedIds}

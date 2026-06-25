@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowLeft, Edit2 } from 'lucide-react';
 import { useGetPurchaseOrderById } from '@/hooks/PurchaseOrder/usePurchaOrder';
+import { PurchaseOrderItemResponse } from '@/types/supplier/purchase-orders';
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('vi-VN', {
@@ -145,7 +146,7 @@ export default function PurchaseOrderDetailPage() {
                 </tr>
               </thead>
               <tbody>
-                {PurchaseOrder?.data?.items.map((item, index) => (
+                {PurchaseOrder?.data?.items.map((item: PurchaseOrderItemResponse, index: number) => (
                   <tr key={index} className="border-b">
                     <td className="py-3 px-4">{item.productName}</td>
                     <td className="text-left py-3 px-4 text-muted-foreground">

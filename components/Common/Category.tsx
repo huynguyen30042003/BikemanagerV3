@@ -5,6 +5,7 @@ interface CategoryProp {
 
   selectCategory: string;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   categoryData: any[];
 }
 

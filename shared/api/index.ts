@@ -8,6 +8,7 @@ const APP_URL = "https://localhost:5001";
 
 interface FailedQueueItem {
   resolve: (token: string) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   reject: (error: any) => void;
 }
 
@@ -32,11 +33,12 @@ class Api {
     this.setupInterceptors();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private isExpiredTokenError(error: AxiosError | any): boolean {
     return error.response?.status === 401;
   }
 
-  private processQueue(error: any, token: string | null = null) {
+  private processQueue(error: unknown, token: string | null = null) {
     this.failedQueue.forEach(({ resolve, reject }) => {
       if (token) {
         resolve(token);

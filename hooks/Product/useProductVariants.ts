@@ -68,7 +68,7 @@ export const useCreateProductVariant = () => {
   return useMutation({
     mutationFn: (body: CreateProductVariantRequest) =>
       createProductVariant(body),
-    onSuccess: (_data) => {
+    onSuccess: () => {
       qc.invalidateQueries({ queryKey: VARIANT_KEYS.all });
       qc.invalidateQueries({ queryKey: PRODUCT_KEYS.all });
     },
@@ -92,7 +92,7 @@ export const useDeleteProductVariant = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteProductVariant(id),
-    onSuccess: (_data, id) => {
+    onSuccess: () => {
       qc.invalidateQueries({ queryKey: VARIANT_KEYS.all });
       qc.invalidateQueries({ queryKey: PRODUCT_KEYS.all });
     }

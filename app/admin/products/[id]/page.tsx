@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -82,7 +83,7 @@ export default function ProductDetailPage() {
   const { mutateAsync: removeVariant, isPending: isDeletingVariant } =
     useDeleteProductVariant();
 
-  const variantForm = useForm<ProductVariantFormValues>({
+  const variantForm = useForm({
     resolver: zodResolver(productVariantSchema),
     defaultValues: {
       importPrice: 0,
@@ -153,7 +154,7 @@ export default function ProductDetailPage() {
       await removeVariant(deleteVariant.id);
       toast.success("Xóa biến thể thành công");
       setDeleteVariant(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Có lỗi xảy ra");
     }
@@ -227,7 +228,7 @@ export default function ProductDetailPage() {
       }
       serialForm.reset();
       setSerialDialog(false);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Có lỗi xảy ra");
     }
@@ -246,7 +247,7 @@ export default function ProductDetailPage() {
 
       toast.success("Xóa serial thành công");
       setDeleteSerial(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Có lỗi xảy ra");
     }

@@ -287,6 +287,7 @@ export function useSalePageState() {
 		setPageSerial(DEFAULT_PAGE);
 	};
 	const handleSearchCustomer = () => {
+		// eslint-disable-next-line react-hooks/incompatible-library
 		const customerPhone = watch("customerPhone");
 		getCustomersByPhoneNumber.mutate(customerPhone, {
 			onSuccess: (data) => {

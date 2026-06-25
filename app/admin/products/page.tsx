@@ -32,6 +32,7 @@ import { PRODUCT_TYPES, ProductSimpleDto, ProductType } from "@/types/product/pr
 import { useDebounceSearch } from "@/hooks/useDebounceSearch";
 import { Column, Table } from "@/components/ui/Table";
 import { Image } from "@/components/ui/image";
+import { CategoryDto } from "@/types/product/category";
 
 export default function ProductsPage() {
   const router = useRouter();
@@ -182,7 +183,7 @@ export default function ProductsPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Tất cả danh mục</SelectItem>
-              {categories.map((c) => (
+              {categories.map((c: CategoryDto) => (
                 <SelectItem key={c.id} value={c.id}>
                   {c.name}
                 </SelectItem>

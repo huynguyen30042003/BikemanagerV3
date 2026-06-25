@@ -14,6 +14,7 @@ export const useGetPurchaseOrder = (params: PurchaseOrderQuery) =>
     staleTime: 1000 * 60 * 10,
   });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useGetPurchaseOrderById = (id: string,options?: UseQueryOptions<any>) =>
   useQuery({
     queryKey: PURCHASEORDER_KEYS.detail(id),

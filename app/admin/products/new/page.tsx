@@ -29,6 +29,7 @@ import { useCreateProduct } from "@/hooks/Product/useProduct";
 import { Image } from "@/components/ui/image";
 import { CategorySelect } from "@/components/Product/Category/CategorySelect";
 import { PRODUCT_TYPES } from "@/types/product/product";
+import { brandRes } from "@/types/product/brand";
 
 // ─── Schema ───────────────────────────────────────────────────────────────────
 const schema = z.object({
@@ -58,7 +59,7 @@ export default function CreateProductPage() {
 
   const { mutateAsync: createProduct, isPending } = useCreateProduct();
 
-  const form = useForm<FormValues>({
+  const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       productType: "Bicycle",
@@ -240,7 +241,7 @@ export default function CreateProductPage() {
                       <SelectValue placeholder="Chọn thương hiệu" />
                     </SelectTrigger>
                     <SelectContent>
-                      {brands.map((b) => (
+                      {brands.map((b: brandRes) => (
                         <SelectItem key={b.id} value={b.id}>
                           {b.name}
                         </SelectItem>
