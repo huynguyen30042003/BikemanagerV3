@@ -45,6 +45,8 @@ export default function CreateSalePage() {
 		isLoadingProductVariant,
 		page,
 		setPage,
+		pageSerial,
+		setPageSerial,
 		form,
 		onSubmit,
 		discount,
@@ -257,7 +259,7 @@ export default function CreateSalePage() {
 																{/* Price */}
 																<div className="flex items-center justify-between border-t border-gray-100 mt-2">
 																	<span className="font-bold text-lg text-pink-600">
-																		{productVariant?.importPrice.toLocaleString()}
+																		{productVariant?.sellingPrice.toLocaleString()}
 																		đ
 																	</span>
 																</div>
@@ -358,57 +360,121 @@ export default function CreateSalePage() {
 							</Tabs>
 						</div>
 
-						<div className="col-span-full flex flex-col gap-3 px-4 pb-4 md:flex-row md:items-center md:justify-between">
-							<div>
-								Trang {page} / {ProductVariantsData?.totalPages}{" "}
-								( Tổng sản phẩm:{" "}
-								{ProductVariantsData?.totalItems} )
-							</div>
+						{tab == "Part" ? (
+							<div className="col-span-full flex flex-col gap-3 px-4 pb-4 md:flex-row md:items-center md:justify-between">
+								<div>
+									Trang {page} /{" "}
+									{ProductVariantsData?.totalPages} ( Tổng sản
+									phẩm: {ProductVariantsData?.totalItems} )
+								</div>
 
-							<div className="flex flex-wrap gap-2">
-								<Button
-									type="button"
-									variant="outline"
-									disabled={page === 1}
-									onClick={() => setPage((prev) => prev - 1)}
-								>
-									Previous
-								</Button>
-
-								{Array.from(
-									{
-										length:
-											ProductVariantsData?.totalPages ??
-											1,
-									},
-									(_, index) => index + 1,
-								).map((currentPage) => (
+								<div className="flex flex-wrap gap-2">
 									<Button
-										key={currentPage}
 										type="button"
-										variant={
-											page === currentPage
-												? "default"
-												: "outline"
+										variant="outline"
+										disabled={page === 1}
+										onClick={() =>
+											setPage((prev) => prev - 1)
 										}
-										onClick={() => setPage(currentPage)}
 									>
-										{currentPage}
+										Previous
 									</Button>
-								))}
 
-								<Button
-									type="button"
-									variant="outline"
-									disabled={
-										page === ProductVariantsData?.totalPages
-									}
-									onClick={() => setPage((prev) => prev + 1)}
-								>
-									Next
-								</Button>
+									{Array.from(
+										{
+											length:
+												ProductVariantsData?.totalPages ??
+												1,
+										},
+										(_, index) => index + 1,
+									).map((currentPage) => (
+										<Button
+											key={currentPage}
+											type="button"
+											variant={
+												page === currentPage
+													? "default"
+													: "outline"
+											}
+											onClick={() => setPage(currentPage)}
+										>
+											{currentPage}
+										</Button>
+									))}
+
+									<Button
+										type="button"
+										variant="outline"
+										disabled={
+											page ===
+											ProductVariantsData?.totalPages
+										}
+										onClick={() =>
+											setPage((prev) => prev + 1)
+										}
+									>
+										Next
+									</Button>
+								</div>
 							</div>
-						</div>
+						) : (
+							<div className="col-span-full flex flex-col gap-3 px-4 pb-4 md:flex-row md:items-center md:justify-between">
+								<div>
+									Trang {pageSerial} /{" "}
+									{serialsData?.totalPages} ( Tổng sản
+									phẩm: {serialsData?.totalItems} )
+								</div>
+
+								<div className="flex flex-wrap gap-2">
+									<Button
+										type="button"
+										variant="outline"
+										disabled={pageSerial === 1}
+										onClick={() =>
+											setPageSerial((prev) => prev - 1)
+										}
+									>
+										Previous
+									</Button>
+
+									{Array.from(
+										{
+											length:
+												serialsData?.totalPages ??
+												1,
+										},
+										(_, index) => index + 1,
+									).map((currentPage) => (
+										<Button
+											key={currentPage}
+											type="button"
+											variant={
+												page === currentPage
+													? "default"
+													: "outline"
+											}
+											onClick={() => setPageSerial(currentPage)}
+										>
+											{currentPage}
+										</Button>
+									))}
+
+									<Button
+										type="button"
+										variant="outline"
+										disabled={
+											page ===
+											serialsData?.totalPages
+										}
+										onClick={() =>
+											setPageSerial((prev) => prev + 1)
+										}
+									>
+										Next
+									</Button>
+								</div>
+							</div>
+						)}
 					</CardContent>
 				</Card>
 				<form
@@ -426,18 +492,13 @@ export default function CreateSalePage() {
 									<label className="text-sm font-medium">
 										Tên khách hàng *
 									</label>
-									<Input
-										{...register("customerName")}
-									/>
-									
+									<Input {...register("customerName")} />
 								</div>
 								<div className="space-y-2">
 									<label className="text-sm font-medium">
 										Số điện thoại *
 									</label>
-									<Input
-										{...register("customerPhone")}
-									/>
+									<Input {...register("customerPhone")} />
 									{errors.customerPhone && (
 										<p className="text-red-600 text-xs mt-1">
 											{errors.customerPhone.message}
@@ -448,9 +509,7 @@ export default function CreateSalePage() {
 									<label className="text-sm font-medium">
 										Email *
 									</label>
-									<Input
-										{...register("customerEmail")}
-									/>
+									<Input {...register("customerEmail")} />
 									{errors.customerEmail && (
 										<p className="text-red-600 text-xs mt-1">
 											{errors.customerEmail.message}
@@ -461,9 +520,7 @@ export default function CreateSalePage() {
 									<label className="text-sm font-medium">
 										Địa chỉ *
 									</label>
-									<Input
-										{...register("customerAddress")}
-									/>
+									<Input {...register("customerAddress")} />
 									{errors.customerAddress && (
 										<p className="text-red-600 text-xs mt-1">
 											{errors.customerAddress.message}
@@ -693,7 +750,9 @@ export default function CreateSalePage() {
 																									Provider.id
 																								}
 																							>
-																								{Provider.name }
+																								{
+																									Provider.name
+																								}
 																							</SelectItem>
 																						),
 																					)}

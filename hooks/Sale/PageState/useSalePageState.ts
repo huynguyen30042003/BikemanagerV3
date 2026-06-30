@@ -321,6 +321,8 @@ export function useSalePageState() {
 		form,
 		page,
 		setPage,
+		pageSerial,
+		setPageSerial,
 		pageSize,
 		onSubmit,
 		searchTerm,
