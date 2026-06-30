@@ -24,8 +24,9 @@ export interface brandRes {
   slug: string;
   logoUrl: string;}
 export interface UpdateWarehouseRequest {
-  Name: string,
-  Address?: string,
+  id: string,
+  name: string,
+  address?: string,
 }
 export interface PagedResult<T> {
   page: number;

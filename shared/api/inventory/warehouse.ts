@@ -1,7 +1,7 @@
 import { getAccessToken } from "@/lib/auth";
 import api from "..";
 import { APP_URL } from "../../constants/apiConstants";
-import { CreateWarehouseRequest, ItemResult, PagedResult, WarehouseQuery, WarehouseResponse } from "@/types/inventory/warehouse";
+import { CreateWarehouseRequest, ItemResult, PagedResult, UpdateWarehouseRequest, WarehouseQuery, WarehouseResponse } from "@/types/inventory/warehouse";
 
 export const getWarehouse = async (
   params: WarehouseQuery,
@@ -50,6 +50,22 @@ export const createWarehouse = async (
   const token = getAccessToken();
 
   const response = await api.post(`${APP_URL}/warehouses`, formdata, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+
+    withCredentials: true,
+  });
+
+  return response.data;
+};
+export const updateWarehouse = async (
+  formdata: UpdateWarehouseRequest,
+): Promise<ItemResult<WarehouseResponse>> => {
+  const token = getAccessToken();
+
+  const response = await api.patch(`${APP_URL}/warehouses/${formdata.id}`, formdata, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

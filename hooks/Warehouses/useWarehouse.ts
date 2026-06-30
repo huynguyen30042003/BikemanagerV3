@@ -1,5 +1,5 @@
-import { createWarehouse, deleteWarehouse, getWarehouse, getWarehouseById } from "@/shared/api/inventory/warehouse";
-import { CreateWarehouseRequest, WarehouseQuery } from "@/types/inventory/warehouse";
+import { createWarehouse, deleteWarehouse, getWarehouse, getWarehouseById, updateWarehouse } from "@/shared/api/inventory/warehouse";
+import { CreateWarehouseRequest, UpdateWarehouseRequest, WarehouseQuery } from "@/types/inventory/warehouse";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const WAREHOUSE_KEYS = {
@@ -27,6 +27,18 @@ export const useCreateWarehouse = () => {
     mutationFn: (body: CreateWarehouseRequest) =>
       createWarehouse(body),
     onSuccess: () => {
+      qc.invalidateQueries({ queryKey: WAREHOUSE_KEYS.all });
+    },
+  });
+};
+
+export const useUpdateWarehouse = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body: UpdateWarehouseRequest) =>
+      updateWarehouse(body),
+    onSuccess: (_,body) => {
+      qc.invalidateQueries({ queryKey: WAREHOUSE_KEYS.detail(body.id) });
       qc.invalidateQueries({ queryKey: WAREHOUSE_KEYS.all });
     },
   });

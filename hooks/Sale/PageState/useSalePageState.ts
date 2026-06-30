@@ -14,7 +14,6 @@ import {
 } from "@/constants/Vehiclespage.constants";
 import { useEffect, useState } from "react";
 import { useDebounceSearch } from "@/hooks/useDebounceSearch";
-import { useGetProductVariants } from "@/hooks/Product/useProductVariants";
 import { useGetCustomersByPhoneNumber } from "@/hooks/Customer/useCustomer";
 import { PurchaseOrderItemPreView } from "@/types/supplier/purchase-orders";
 import { ProductVariantResponse } from "@/types/product/productVariants";
@@ -23,6 +22,7 @@ import { useGetSerialNumbers } from "@/hooks/Product/useSerialNumber";
 import { SerialNumberResponse } from "@/types/product/serialNumber";
 import { useGetInstallmentProvider } from "@/hooks/InstallmentProviders/useInstallmentProviders";
 import { useRouter } from "next/navigation";
+import { useGetInventoryStockDetail } from "@/hooks/Inventory/useInventoryStock";
 const schema = z.object({
 	customerName: z.string().min(1, "Vui lòng nhập tên khách hàng"),
 	customerPhone: z.string().min(1, "Vui lòng nhập số điện thoại"),
@@ -67,14 +67,17 @@ export function useSalePageState() {
 	});
 	const [tab, setTab] = useState<string>("Vehicle");
 	// const [paymentMethod, setPaymentMethod] = useState<string>("Cash");//Cash //Installment
-	const [warehouseId, setWarehouseId] = useState<string>();
-	const { data: ProductVariantsData, isLoading: isLoadingProductVariant } =
-		useGetProductVariants({
-			trackSerial: false,
-			search: searchTerm,
-			page: page,
-			pageSize: pageSize,
-		});
+	const [warehouseId, setWarehouseId] = useState<string>("all");
+	const {
+		data: InventoryStockDetailData,
+		isLoading: isLoadingInventoryStockDetail,
+	} = useGetInventoryStockDetail({
+		WarehouseId: warehouseId === "all" ? undefined : warehouseId,
+		InStockOnly: true,
+		Page: page,
+		PageSize: pageSize,
+	});
+
 	const { data: warehouseData, isLoading: isLoadingWarehouse } =
 		useGetWarehouse({
 			Page: 1,
@@ -82,7 +85,7 @@ export function useSalePageState() {
 		});
 	const { data: serialsData, isLoading: isLoadingSerial } =
 		useGetSerialNumbers({
-			warehouseId: warehouseId,
+			warehouseId: warehouseId === "all" ? undefined : warehouseId,
 			search: searchTermSerial,
 			page: pageSerial,
 			pageSize: pageSize,
@@ -304,7 +307,7 @@ export function useSalePageState() {
 		(sum, item) => sum + item.quantity * item.unitPrice,
 		0,
 	);
-	const downPayment = watch("downPayment")?? 0;
+	const downPayment = watch("downPayment") ?? 0;
 	useEffect(() => {
 		setValue(
 			"loanAmount",
@@ -339,9 +342,9 @@ export function useSalePageState() {
 		handleRemoveProductVariantList,
 		handleUnitPriceChange,
 		handleQuantityChange,
-		ProductVariantsData,
+		InventoryStockDetailData,
 		handleSearchCustomer,
-		isLoadingProductVariant,
+		isLoadingInventoryStockDetail,
 		fields: fieldArray.fields,
 		append: fieldArray.append,
 		remove: fieldArray.remove,

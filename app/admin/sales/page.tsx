@@ -12,10 +12,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { ArrowLeft, Trash2 } from "lucide-react";
 import { useSalePageState } from "@/hooks/Sale/PageState/useSalePageState";
-import {
-	ProductVariantResponse,
-	vehicleColorMap,
-} from "@/types/product/productVariants";
+import { vehicleColorMap } from "@/types/product/productVariants";
 import { useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -26,6 +23,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { SerialNumberResponse } from "@/types/product/serialNumber";
+import { InventoryStockResponse } from "@/types/inventory/inventory-stock";
 const formatCurrency = (value: number) => {
 	return new Intl.NumberFormat("vi-VN", {
 		style: "currency",
@@ -41,8 +39,8 @@ export default function CreateSalePage() {
 		searchInputSerial,
 		handleSearch,
 		handleSearchSerial,
-		ProductVariantsData,
-		isLoadingProductVariant,
+		InventoryStockDetailData,
+		isLoadingInventoryStockDetail,
 		page,
 		setPage,
 		pageSerial,
@@ -75,7 +73,6 @@ export default function CreateSalePage() {
 		handleSubmit,
 		formState: { errors },
 	} = form;
-	useEffect(() => console.log(listProductVariant), [listProductVariant]);
 	return (
 		<div className="p-4 md:p-8 space-y-8">
 			<div className="flex items-center gap-4  mb-2">
@@ -136,18 +133,24 @@ export default function CreateSalePage() {
 										</TabsTrigger>
 									</TabsList>
 									<div className="flex-1">
-										<CardContent className="space-y-4">
 											<div>
 												<Select
 													value={warehouseId}
 													onValueChange={
 														handleWarehouseId
 													}
+													
 												>
-													<SelectTrigger className="w-full">
+													<SelectTrigger className="w-30">
 														<SelectValue placeholder="Nhà Kho" />
 													</SelectTrigger>
 													<SelectContent>
+														<SelectItem
+															key="all"
+															value="all"
+														>
+															All
+														</SelectItem>
 														{!isLoadingWarehouse &&
 															warehouseData?.items?.map(
 																(warehouse) => (
@@ -168,22 +171,21 @@ export default function CreateSalePage() {
 													</SelectContent>
 												</Select>
 											</div>
-										</CardContent>
 									</div>
 								</div>
 								<TabsContent value="Part">
 									<div className="max-h-[calc(100vh-268px)] overflow-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 p-4 mb-0">
-										{!isLoadingProductVariant &&
-											ProductVariantsData?.items?.map(
+										{!isLoadingInventoryStockDetail &&
+											InventoryStockDetailData?.items?.map(
 												(
-													productVariant: ProductVariantResponse,
+													InventoryStock: InventoryStockResponse,
 												) => (
 													<Card
-														key={productVariant?.id}
+														key={InventoryStock?.id}
 														className=" py-0 cursor-pointer group hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 ring-1 ring-gray-200 rounded-xl"
 														onClick={() =>
 															handleAddProductVariantList(
-																productVariant,
+																InventoryStock?.productVariant,
 															)
 														}
 													>
@@ -191,7 +193,8 @@ export default function CreateSalePage() {
 															{/* Header strip with brand + stock badge */}
 															<div className="px-4 pt-4 flex items-start justify-between gap-2">
 																<span className="text-xs font-medium text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full truncate max-w-[60%]">
-																	{productVariant
+																	{InventoryStock
+																		?.productVariant
 																		?.product
 																		?.brand
 																		?.name ||
@@ -200,16 +203,20 @@ export default function CreateSalePage() {
 
 																<span
 																	className={`text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap ${
-																		(productVariant?.stockQuantity ??
+																		(InventoryStock
+																			?.productVariant
+																			?.stockQuantity ??
 																			0) >
 																		0
 																			? "bg-green-50 text-green-600"
 																			: "bg-red-50 text-red-500"
 																	}`}
 																>
-																	{(productVariant?.stockQuantity ??
+																	{(InventoryStock
+																		?.productVariant
+																		?.stockQuantity ??
 																		0) > 0
-																		? `Còn ${productVariant?.stockQuantity}`
+																		? `Còn ${InventoryStock?.productVariant?.stockQuantity}`
 																		: "Hết hàng"}
 																</span>
 															</div>
@@ -218,7 +225,8 @@ export default function CreateSalePage() {
 																{/* Product name */}
 																<h3 className="mb-2 font-semibold text-base text-gray-900 leading-snug line-clamp-2 group-hover:text-pink-600 transition-colors ">
 																	{
-																		productVariant
+																		InventoryStock
+																			?.productVariant
 																			?.product
 																			?.name
 																	}
@@ -226,13 +234,15 @@ export default function CreateSalePage() {
 
 																{/* Category + Color */}
 																<div className="flex flex-wrap gap-2">
-																	{productVariant
+																	{InventoryStock
+																		?.productVariant
 																		?.product
 																		?.category
 																		?.name && (
 																		<span className="text-xs px-2 py-1 rounded-md bg-gray-50 text-gray-600 border border-gray-100">
 																			{
-																				productVariant
+																				InventoryStock
+																					?.productVariant
 																					?.product
 																					?.category
 																					?.name
@@ -240,17 +250,23 @@ export default function CreateSalePage() {
 																		</span>
 																	)}
 
-																	{productVariant?.color && (
+																	{InventoryStock
+																		?.productVariant
+																		?.color && (
 																		<span className="text-xs px-2 py-1 rounded-md bg-purple-50 text-purple-600 border border-purple-100 flex items-center gap-1">
 																			<span
 																				className="w-2.5 h-2.5 rounded-full border border-purple-200"
 																				style={{
 																					backgroundColor:
-																						productVariant.color,
+																						InventoryStock
+																							?.productVariant
+																							.color,
 																				}}
 																			/>
 																			{
-																				productVariant?.color
+																				InventoryStock
+																					?.productVariant
+																					?.color
 																			}
 																		</span>
 																	)}
@@ -259,7 +275,7 @@ export default function CreateSalePage() {
 																{/* Price */}
 																<div className="flex items-center justify-between border-t border-gray-100 mt-2">
 																	<span className="font-bold text-lg text-pink-600">
-																		{productVariant?.sellingPrice.toLocaleString()}
+																		{InventoryStock?.productVariant?.sellingPrice.toLocaleString()}
 																		đ
 																	</span>
 																</div>
@@ -364,8 +380,9 @@ export default function CreateSalePage() {
 							<div className="col-span-full flex flex-col gap-3 px-4 pb-4 md:flex-row md:items-center md:justify-between">
 								<div>
 									Trang {page} /{" "}
-									{ProductVariantsData?.totalPages} ( Tổng sản
-									phẩm: {ProductVariantsData?.totalItems} )
+									{InventoryStockDetailData?.totalPages} (
+									Tổng sản phẩm:{" "}
+									{InventoryStockDetailData?.totalItems} )
 								</div>
 
 								<div className="flex flex-wrap gap-2">
@@ -383,7 +400,7 @@ export default function CreateSalePage() {
 									{Array.from(
 										{
 											length:
-												ProductVariantsData?.totalPages ??
+												InventoryStockDetailData?.totalPages ??
 												1,
 										},
 										(_, index) => index + 1,
@@ -407,7 +424,7 @@ export default function CreateSalePage() {
 										variant="outline"
 										disabled={
 											page ===
-											ProductVariantsData?.totalPages
+											InventoryStockDetailData?.totalPages
 										}
 										onClick={() =>
 											setPage((prev) => prev + 1)
@@ -421,8 +438,8 @@ export default function CreateSalePage() {
 							<div className="col-span-full flex flex-col gap-3 px-4 pb-4 md:flex-row md:items-center md:justify-between">
 								<div>
 									Trang {pageSerial} /{" "}
-									{serialsData?.totalPages} ( Tổng sản
-									phẩm: {serialsData?.totalItems} )
+									{serialsData?.totalPages} ( Tổng sản phẩm:{" "}
+									{serialsData?.totalItems} )
 								</div>
 
 								<div className="flex flex-wrap gap-2">
@@ -440,8 +457,7 @@ export default function CreateSalePage() {
 									{Array.from(
 										{
 											length:
-												serialsData?.totalPages ??
-												1,
+												serialsData?.totalPages ?? 1,
 										},
 										(_, index) => index + 1,
 									).map((currentPage) => (
@@ -453,7 +469,9 @@ export default function CreateSalePage() {
 													? "default"
 													: "outline"
 											}
-											onClick={() => setPageSerial(currentPage)}
+											onClick={() =>
+												setPageSerial(currentPage)
+											}
 										>
 											{currentPage}
 										</Button>
@@ -463,8 +481,7 @@ export default function CreateSalePage() {
 										type="button"
 										variant="outline"
 										disabled={
-											page ===
-											serialsData?.totalPages
+											page === serialsData?.totalPages
 										}
 										onClick={() =>
 											setPageSerial((prev) => prev + 1)

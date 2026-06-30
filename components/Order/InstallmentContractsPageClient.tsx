@@ -45,27 +45,38 @@ export default function InstallmentContractsPageClient() {
 			0,
 		),
 	};
-	// const getProviderName = (providerId: string) => {
-	//   return mockData.installmentProviders.find((p) => p.id === providerId)?.name || 'N/A';
-	// };
 
-	// const getOrderCode = (orderId: string) => {
-	//   return mockData.orders.find((o) => o.id === orderId)?.orderCode || 'N/A';
-	// };
 	const columns: Column<InstallmentContractsRes>[] = [
 		{
 			key: "name",
 			title: "Nhà phân phối",
 			classNameHeader: "text-left",
+			accessor: (row) => row.installmentProvider?.name ?? "—",
 		},
 		{
 			key: "phone",
 			title: "SĐT",
 			classNameHeader: "text-left",
 			classNameItem: "text-left",
+			accessor: (row) => row.installmentProvider?.phone ?? "—",
 		},
 		{
-			key: "isActive",
+			key: "loanAmount",
+			title: "Số tiền vay",
+			classNameHeader: "text-left",
+		},
+		{
+			key: "downPayment",
+			title: "Số tiền đặt cọc",
+			classNameHeader: "text-left",
+		},
+		{
+			key: "installmentMonths",
+			title: "Số tháng trả góp",
+			classNameHeader: "text-left",
+		},
+		{
+			key: "contractStatus",
 			title: "Trạng Thái",
 			classNameHeader: "text-left",
 		},
@@ -166,7 +177,6 @@ export default function InstallmentContractsPageClient() {
 										" ",
 									)[0]
 								}
-								B
 							</div>
 						</CardContent>
 					</Card>
