@@ -39,12 +39,12 @@ export async function POST(req: NextRequest) {
 
       expires_in: data.expires_in,
     });
-
+    const isProduction = process.env.NODE_ENV === "production";
     // lưu cookie HttpOnly
     nextResponse.cookies.set("access_token", data.access_token, {
       httpOnly: true,
 
-      secure: false,
+      secure: isProduction,
 
       sameSite: "lax",
 
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
 
     return nextResponse;
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     return NextResponse.json(
       {
