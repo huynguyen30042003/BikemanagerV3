@@ -269,8 +269,11 @@ export function useSalePageState() {
 			};
 			console.log(installmentRequest);
 			createInstallmentOrder.mutate(installmentRequest, {
+				onSuccess: () => {
+					alert("Bán hàng thành công")
+				},
 				onSettled: () => {
-					router.push("/admin/sales");
+					router.refresh()	
 				},
 			});
 			return;

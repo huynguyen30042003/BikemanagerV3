@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { Trash2, Plus, Edit2 } from "lucide-react";
+import { Trash2, Plus, Edit2, Eye } from "lucide-react";
 import { useInstallmentContractsPageState } from "@/hooks/InstallmentContracts/PageState/useInstallmentContractsPageState";
 import ConfirmDialog from "@/components/Common/ConfirmDialog";
 import { InstallmentContractsRes } from "@/types/order/installment-contracts";
@@ -87,9 +87,9 @@ export default function InstallmentContractsPageClient() {
 			classNameItem: "text-center",
 			render: (_value, row) => (
 				<div className="flex justify-end gap-2">
-					<Link href={`/admin/installment-providers/${row.id}/edit`}>
+					<Link href={`/admin/installment-contracts/${row.id}`}>
 						<Button variant="outline" size="sm">
-							<Edit2 size={16} />
+							<Eye size={16} />
 						</Button>
 					</Link>
 					<Button
@@ -115,12 +115,6 @@ export default function InstallmentContractsPageClient() {
 							Quản lý tất cả hợp đồng trả góp
 						</p>
 					</div>
-					<Link href="/admin/installment-contracts/new">
-						<Button className="gap-2">
-							<Plus size={18} />
-							Thêm hợp đồng
-						</Button>
-					</Link>
 				</div>
 
 				{/* Stats */}
