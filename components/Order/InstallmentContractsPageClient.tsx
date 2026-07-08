@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { Trash2, Plus, Edit2, Eye } from "lucide-react";
+import { Trash2, Eye } from "lucide-react";
 import { useInstallmentContractsPageState } from "@/hooks/InstallmentContracts/PageState/useInstallmentContractsPageState";
 import ConfirmDialog from "@/components/Common/ConfirmDialog";
 import { InstallmentContractsRes } from "@/types/order/installment-contracts";

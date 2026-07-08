@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { useViewInstallmentContractsPageState } from "@/hooks/InstallmentContracts/PageState/useEditInstallmentContractsPageState";
+import { useViewInstallmentContractsPageState } from "@/hooks/InstallmentContracts/PageState/useViewInstallmentContractsPageState";
 
 const formatCurrency = (value: number) => {
 	return new Intl.NumberFormat("vi-VN", {
