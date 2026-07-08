@@ -38,10 +38,10 @@ export function useOrderPageState() {
     const query = new URLSearchParams();
 
     if (searchTerm) query.set("search", searchTerm);
-    if (!!paymentStatus) query.set("paymentStatus", paymentStatus);
-    if (!!orderStatus) query.set("orderStatus", orderStatus);
-    if (!!fromDate) query.set("fromDate", fromDate);
-    if (!!toDate) query.set("toDate", toDate);
+    if (paymentStatus) query.set("paymentStatus", paymentStatus);
+    if (orderStatus) query.set("orderStatus", orderStatus);
+    if (fromDate) query.set("fromDate", fromDate);
+    if (toDate) query.set("toDate", toDate);
     query.set("page", page.toString());
     query.set("pageSize", pageSize.toString());
 

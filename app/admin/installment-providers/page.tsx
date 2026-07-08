@@ -6,7 +6,8 @@ import { Suspense } from "react";
 export default function InstallmentProvidersPage() {
 
 	return (
-		<Suspense fallback={<div>Loading...</div>}>
+		<Suspense fallback={<div>Loading...</div>}> 
+		{/* use <Suspense because have useSearchParams */}
 			<InstallmentProvidersPageClient/>
 		</Suspense>
 	);

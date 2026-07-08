@@ -8,7 +8,7 @@ export interface InstallmentProviderQuery {
 export interface CreateInstallmentProviderRequest {
   Name: string;
   Phone: string;
-  ApiEndpoint: string;
+  ApiEndpoint?: string;
   IsActive: boolean;
 }
 
@@ -16,7 +16,7 @@ export interface InstallmentProviderResponse {
   id: string;
   name: string;
   phone: string;
-  apiEndpoint: string;
+  apiEndpoint?: string;
   isActive: boolean;
 }
 

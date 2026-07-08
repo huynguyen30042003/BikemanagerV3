@@ -35,7 +35,7 @@ export function useNewPurchaseOrdersPageState() {
     const query = new URLSearchParams();
 
     if (searchTerm) query.set("search", searchTerm);
-    if (!!status) query.set("orderStatus", status);
+    if (status) query.set("orderStatus", status);
     query.set("page", page.toString());
     query.set("pageSize", pageSize.toString());
 
