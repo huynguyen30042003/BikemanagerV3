@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Column, Table } from "@/components/ui/Table";
 import { useGetCustomers } from "@/hooks/Customer/useCustomer";
-import { Customer } from "@/types/customer";
+import { Customer } from "@/types/Customer/customer";
 import { useEffect, useState } from "react";
 import {
 	Select,

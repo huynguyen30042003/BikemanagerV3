@@ -1,7 +1,7 @@
 import { getAccessToken } from "@/lib/auth";
-import api from ".";
-import { APP_URL } from "../constants/apiConstants";
-import { CustomerReq, CustomerVehicleParams } from "@/types/customer";
+import api from "..";
+import { APP_URL } from "../../constants/apiConstants";
+import { CustomerReq, CustomerVehicleParams } from "@/types/Customer/customer";
 
 export interface GetCustomersParams {
   search?: string;

@@ -1,5 +1,5 @@
-import { createCustomers, getCustomers, getCustomersById, getCustomersByPhoneNumber, GetCustomersParams, getCustomersVehicleById } from "@/shared/api/customer.api";
-import { CustomerReq, CustomerVehicleParams } from "@/types/customer";
+import { createCustomers, getCustomers, getCustomersById, getCustomersByPhoneNumber, GetCustomersParams, getCustomersVehicleById } from "@/shared/api/customer/customer.api";
+import { CustomerReq, CustomerVehicleParams } from "@/types/Customer/customer";
 import { useMutation, useQuery } from "@tanstack/react-query";
 type UseGetOrderOptions = {
   enabled?: boolean;

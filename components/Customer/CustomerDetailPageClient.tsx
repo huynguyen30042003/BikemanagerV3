@@ -24,13 +24,15 @@ import {
 import { useDebounceSearch } from "@/hooks/useDebounceSearch";
 import { useEffect, useState } from "react";
 import { Table } from "@/components/ui/Table";
-import { CustomerVehicleRes } from "@/types/customer";
+import { CustomerVehicleRes } from "@/types/Customer/customer";
 import { orderRes } from "@/types/order/order";
 import { useGetOrder } from "@/hooks/Order/useOrder";
 import { useGetRepairOrder } from "@/hooks/Repair/useRepairOrder";
 import { repairOrderRes } from "@/types/repair";
 import { useGetInstallmentContracts } from "@/hooks/Order/useInstallmentContracts";
 import { InstallmentContractsRes } from "@/types/order/installment-contracts";
+import { useGetWarranties } from "@/hooks/Warranty/useWarranty";
+import { WarrantyResponse } from "@/types/warranty/warranty";
 
 function CustomerDetailPageClient() {
 	const { id } = useParams<{ id: string }>();
@@ -48,19 +50,17 @@ function CustomerDetailPageClient() {
 		delay: 500,
 		initialValue: searchFromUrl,
 	});
-	const { data: customerVehicleReq } =
-		useGetCustomersVehicle(
-			{
-				Search: searchTerm,
-				CustomerId: id,
-				Page: page,
-				PageSize: pageSize,
-			},
-			{
-				enabled: activeTab === "vehicles",
-			},
-		);
-
+	const { data: customerVehicleReq } = useGetCustomersVehicle(
+		{
+			Search: searchTerm,
+			CustomerId: id,
+			Page: page,
+			PageSize: pageSize,
+		},
+		{
+			enabled: activeTab === "vehicles" ||  activeTab === "overview",
+		},
+	);
 	const { data: OrderReq, isLoading: isLoadingOrder } = useGetOrder(
 		{
 			Search: searchTerm,
@@ -96,7 +96,19 @@ function CustomerDetailPageClient() {
 			enabled: activeTab === "installments",
 		},
 	);
+	const { data: warrantiesData, isLoading: isLoadingWarranties } =
+		useGetWarranties(
+			{
+				CustomerId: id,
+				Page: page,
+				PageSize: pageSize,
+			},
+			{
+				enabled: activeTab === "warranty",
+			},
+		);
 	useEffect(() => {
+		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setPage(1);
 	}, [searchTerm]);
 	useEffect(() => {
@@ -244,183 +256,250 @@ function CustomerDetailPageClient() {
 			title: "contractStatus",
 		},
 	];
+	const columnsTableWarranties = [
+		{
+			key: "serialNumberId",
+			title: "serialNumberId",
+		},
+		{
+			key: "customerId",
+			title: "customerId",
+		},
+		{
+			key: "orderId",
+			title: "orderId",
+		},
+		{
+			key: "startDate",
+			title: "startDate",
+		},
+		{
+			key: "endDate",
+			title: "endDate",
+		},
+		{
+			key: "status",
+			title: "status",
+		},
+	];
 	return (
-			<div className="flex-1 min-h-screen">
-				<div className="px-8 h-16 border-b text-[24px] flex items-center justify-between">
-					<Button asChild variant="ghost" size="sm">
-						<Link href="/admin/customers">
-							<ArrowLeft size={18} />
-							Quay lại
-						</Link>
-					</Button>
-
-					<Link href="/admin/customers/new">
-						<Button>
-							<Edit size={18} />
-							Chỉnh sửa
-						</Button>
+		<div className="flex-1 min-h-screen">
+			<div className="px-8 h-16 border-b text-[24px] flex items-center justify-between">
+				<Button asChild variant="ghost" size="sm">
+					<Link href="/admin/customer">
+						<ArrowLeft size={18} />
+						Quay lại
 					</Link>
-				</div>
+				</Button>
 
-				{!isLoading && customer && (
-					<>
-						<Card className="rounded-xl mx-8 mt-8">
-							<CardHeader>
-								<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+				<Link href="/admin/customers/new">
+					<Button>
+						<Edit size={18} />
+						Chỉnh sửa
+					</Button>
+				</Link>
+			</div>
+
+			{!isLoading && customer && (
+				<>
+					<Card className="rounded-xl mx-8 mt-8">
+						<CardHeader>
+							<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+								<div>
+									<CardTitle className="text-2xl">
+										{customer.fullName}
+									</CardTitle>
+									<CardDescription className="mt-2">
+										ID: {customer.id} cập nhật thêm cho warrary để lấy thêm data
+									</CardDescription>
+								</div>
+							</div>
+						</CardHeader>
+						<CardContent>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+								<div className="space-y-4">
 									<div>
-										<CardTitle className="text-2xl">
-											{customer.fullName}
+										<label className="text-sm text-muted-foreground">
+											Email
+										</label>
+										<p className="font-medium">
+											{customer.email}
+										</p>
+									</div>
+									<div>
+										<label className="text-sm text-muted-foreground">
+											Số điện thoại
+										</label>
+										<p className="font-medium">
+											{customer.phoneNumber}
+										</p>
+									</div>
+									<div>
+										<label className="text-sm text-muted-foreground">
+											Địa chỉ
+										</label>
+										<p className="font-medium">
+											{customer.address}
+										</p>
+									</div>
+								</div>
+								<div className="space-y-4">
+									<div>
+										<label className="text-sm text-muted-foreground">
+											Level
+										</label>
+										<p className="font-medium">
+											{customer.customerLevel}
+										</p>
+									</div>
+									<div>
+										<label className="text-sm text-muted-foreground">
+											Tổng mua hàng
+										</label>
+										<p className="font-medium">
+											{customer.totalOrders} lần
+										</p>
+									</div>
+									<div>
+										<label className="text-sm text-muted-foreground">Liên hệ cuối cùng</label>
+										<p className="font-medium">
+										{new Date(customer.lastPurchaseAt).toLocaleDateString('vi-VN')}
+										</p>
+									</div>
+								</div>
+							</div>
+						</CardContent>
+					</Card>
+
+					<Tabs
+						value={activeTab}
+						onValueChange={setActiveTab}
+						defaultValue="overview"
+						className="rounded-xl mx-8 mt-8"
+					>
+						<TabsList className="grid w-full grid-cols-4 lg:grid-cols-7">
+							<TabsTrigger value="overview">
+								Tổng quan
+							</TabsTrigger>
+							<TabsTrigger value="vehicles">
+								Phương tiện
+							</TabsTrigger>
+							<TabsTrigger value="orders">Đơn hàng</TabsTrigger>
+							<TabsTrigger value="repairs">Sửa chữa</TabsTrigger>
+							<TabsTrigger value="installments">
+								Trả góp
+							</TabsTrigger>
+							<TabsTrigger value="warranty">Bảo hành</TabsTrigger>
+							<TabsTrigger value="activity">
+								Hoạt động
+							</TabsTrigger>
+						</TabsList>
+
+						{/* Overview Tab */}
+						<TabsContent value="overview">
+							<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+								<Card>
+									<CardHeader className="pb-2">
+										<CardTitle className="text-sm font-medium text-muted-foreground">
+											Tổng doanh thu
 										</CardTitle>
-										<CardDescription className="mt-2">
-											ID: {customer.id}
-										</CardDescription>
-									</div>
-								</div>
-							</CardHeader>
-							<CardContent>
-								<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-									<div className="space-y-4">
-										<div>
-											<label className="text-sm text-muted-foreground">
-												Email
-											</label>
-											<p className="font-medium">
-												{customer.email}
-											</p>
+									</CardHeader>
+									<CardContent>
+										<div className="text-2xl font-bold">
+											{formatCurrency(
+												customer.totalSpent,
+											)}
 										</div>
-										<div>
-											<label className="text-sm text-muted-foreground">
-												Số điện thoại
-											</label>
-											<p className="font-medium">
-												{customer.phoneNumber}
-											</p>
+									</CardContent>
+								</Card>
+								<Card>
+									<CardHeader className="pb-2">
+										<CardTitle className="text-sm font-medium text-muted-foreground">
+											Phương tiện
+										</CardTitle>
+									</CardHeader>
+									<CardContent>
+										<div className="text-2xl font-bold">{customerVehicleReq?.totalItems}</div>
+									</CardContent>
+								</Card>
+								<Card>
+									<CardHeader className="pb-2">
+										<CardTitle className="text-sm font-medium text-muted-foreground">
+											Đơn hàng
+										</CardTitle>
+									</CardHeader>
+									<CardContent>
+										<div className="text-2xl font-bold">
+											{customer.totalOrders}
 										</div>
-										<div>
-											<label className="text-sm text-muted-foreground">
-												Địa chỉ
-											</label>
-											<p className="font-medium">
-												{customer.address}
-											</p>
-										</div>
-									</div>
-									<div className="space-y-4">
-										<div>
-											<label className="text-sm text-muted-foreground">
-												Level
-											</label>
-											<p className="font-medium">
-												{customer.customerLevel}
-											</p>
-										</div>
-										<div>
-											<label className="text-sm text-muted-foreground">
-												Tổng mua hàng
-											</label>
-											<p className="font-medium">
-												{customer.totalOrders} lần
-											</p>
-										</div>
-										{/* <div>
-                <label className="text-sm text-muted-foreground">Liên hệ cuối cùng</label>
-                <p className="font-medium">
-                  {new Date(customer.lastPurchaseAt).toLocaleDateString('vi-VN')}
-                </p>
-              </div> */}
-									</div>
-								</div>
-							</CardContent>
-						</Card>
+									</CardContent>
+								</Card>
+							</div>
+						</TabsContent>
 
-						<Tabs
-							value={activeTab}
-							onValueChange={setActiveTab}
-							defaultValue="overview"
-							className="rounded-xl mx-8 mt-8"
-						>
-							<TabsList className="grid w-full grid-cols-4 lg:grid-cols-7">
-								<TabsTrigger value="overview">
-									Tổng quan
-								</TabsTrigger>
-								<TabsTrigger value="vehicles">
-									Phương tiện
-								</TabsTrigger>
-								<TabsTrigger value="orders">
-									Đơn hàng
-								</TabsTrigger>
-								<TabsTrigger value="repairs">
-									Sửa chữa
-								</TabsTrigger>
-								<TabsTrigger value="installments">
-									Trả góp
-								</TabsTrigger>
-								<TabsTrigger value="warranty">
-									Bảo hành
-								</TabsTrigger>
-								<TabsTrigger value="activity">
-									Hoạt động
-								</TabsTrigger>
-							</TabsList>
-
-							{/* Overview Tab */}
-							<TabsContent value="overview">
-								<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-									<Card>
-										<CardHeader className="pb-2">
-											<CardTitle className="text-sm font-medium text-muted-foreground">
-												Tổng doanh thu
-											</CardTitle>
-										</CardHeader>
-										<CardContent>
-											<div className="text-2xl font-bold">
-												{formatCurrency(
-													customer.totalRevenue,
-												)}
-											</div>
-										</CardContent>
-									</Card>
-									<Card>
-										<CardHeader className="pb-2">
-											<CardTitle className="text-sm font-medium text-muted-foreground">
-												Phương tiện
-											</CardTitle>
-										</CardHeader>
-										<CardContent>
-											{/* <div className="text-2xl font-bold">{vehicles.length}</div> */}
-										</CardContent>
-									</Card>
-									<Card>
-										<CardHeader className="pb-2">
-											<CardTitle className="text-sm font-medium text-muted-foreground">
-												Đơn hàng
-											</CardTitle>
-										</CardHeader>
-										<CardContent>
-											{/* <div className="text-2xl font-bold">{orders.length}</div> */}
-										</CardContent>
-									</Card>
-								</div>
-							</TabsContent>
-
-							<TabsContent value="vehicles">
+						<TabsContent value="vehicles">
+							<Card className="mt-6">
+								<CardHeader>
+									<CardTitle>Danh sách phương tiện</CardTitle>
+								</CardHeader>
+								<CardContent>
+									<div className="">
+										{!isLoading && (
+											<Table<CustomerVehicleRes>
+												showIndex
+												data={
+													customerVehicleReq?.items ??
+													[]
+												}
+												columns={columnsTableVehicle}
+											/>
+										)}
+									</div>
+								</CardContent>
+							</Card>
+						</TabsContent>
+						{!isLoadingOrder && (
+							<TabsContent value="orders">
 								<Card className="mt-6">
 									<CardHeader>
 										<CardTitle>
-											Danh sách phương tiện
+											Danh sách đơn hàng
 										</CardTitle>
 									</CardHeader>
 									<CardContent>
 										<div className="">
 											{!isLoading && (
-												<Table<CustomerVehicleRes>
+												<Table<orderRes>
+													showIndex
+													data={OrderReq?.items ?? []}
+													columns={columnsTableOrder}
+												/>
+											)}
+										</div>
+									</CardContent>
+								</Card>
+							</TabsContent>
+						)}
+
+						{!isLoadingRepairOrder && (
+							<TabsContent value="repairs">
+								<Card className="mt-6">
+									<CardHeader>
+										<CardTitle>
+											Danh sách sửa chữa
+										</CardTitle>
+									</CardHeader>
+									<CardContent>
+										<div className="">
+											{!isLoading && (
+												<Table<repairOrderRes>
 													showIndex
 													data={
-														customerVehicleReq?.items ??
+														RepairOrderReq?.items ??
 														[]
 													}
 													columns={
-														columnsTableVehicle
+														columnsTableRepairOrder
 													}
 												/>
 											)}
@@ -428,92 +507,61 @@ function CustomerDetailPageClient() {
 									</CardContent>
 								</Card>
 							</TabsContent>
-							{!isLoadingOrder && (
-								<TabsContent value="orders">
-									<Card className="mt-6">
-										<CardHeader>
-											<CardTitle>
-												Danh sách đơn hàng
-											</CardTitle>
-										</CardHeader>
-										<CardContent>
-											<div className="">
-												{!isLoading && (
-													<Table<orderRes>
-														showIndex
-														data={
-															OrderReq?.items ??
-															[]
-														}
-														columns={
-															columnsTableOrder
-														}
-													/>
-												)}
-											</div>
-										</CardContent>
-									</Card>
-								</TabsContent>
-							)}
-
-							{!isLoadingRepairOrder && (
-								<TabsContent value="repairs">
-									<Card className="mt-6">
-										<CardHeader>
-											<CardTitle>
-												Danh sách sửa chữa
-											</CardTitle>
-										</CardHeader>
-										<CardContent>
-											<div className="">
-												{!isLoading && (
-													<Table<repairOrderRes>
-														showIndex
-														data={
-															RepairOrderReq?.items ??
-															[]
-														}
-														columns={
-															columnsTableRepairOrder
-														}
-													/>
-												)}
-											</div>
-										</CardContent>
-									</Card>
-								</TabsContent>
-							)}
-							{!isLoadinginstallmentContracts && (
-								<TabsContent value="installments">
-									<Card className="mt-6">
-										<CardHeader>
-											<CardTitle>
-												Danh sách trả góp
-											</CardTitle>
-										</CardHeader>
-										<CardContent>
-											<div className="">
-												{!isLoading && (
-													<Table<InstallmentContractsRes>
-														showIndex
-														data={
-															installmentContractsRes?.items ??
-															[]
-														}
-														columns={
-															columnsTableInstallmentContracts
-														}
-													/>
-												)}
-											</div>
-										</CardContent>
-									</Card>
-								</TabsContent>
-							)}
-						</Tabs>
-					</>
-				)}
-			</div>
+						)}
+						{!isLoadinginstallmentContracts && (
+							<TabsContent value="installments">
+								<Card className="mt-6">
+									<CardHeader>
+										<CardTitle>Danh sách trả góp</CardTitle>
+									</CardHeader>
+									<CardContent>
+										<div className="">
+											{!isLoading && (
+												<Table<InstallmentContractsRes>
+													showIndex
+													data={
+														installmentContractsRes?.items ??
+														[]
+													}
+													columns={
+														columnsTableInstallmentContracts
+													}
+												/>
+											)}
+										</div>
+									</CardContent>
+								</Card>
+							</TabsContent>
+						)}
+						{!isLoadingWarranties && (
+							<TabsContent value="warranty">
+								<Card className="mt-6">
+									<CardHeader>
+										<CardTitle>Danh sách trả góp</CardTitle>
+									</CardHeader>
+									<CardContent>
+										<div className="">
+											{!isLoading && (
+												<Table<WarrantyResponse>
+													showIndex
+													data={
+														warrantiesData?.data?.items ??
+														[]
+													}
+													columns={
+														columnsTableWarranties
+													}
+												/>
+											)}
+										</div>
+									</CardContent>
+								</Card>
+							</TabsContent>
+						)}
+					</Tabs>
+				</>
+			)}
+		</div>
 	);
 }
 
