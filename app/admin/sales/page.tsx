@@ -13,7 +13,6 @@ import Link from "next/link";
 import { ArrowLeft, Trash2 } from "lucide-react";
 import { useSalePageState } from "@/hooks/Sale/PageState/useSalePageState";
 import { vehicleColorMap } from "@/types/product/productVariants";
-import { useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
 	Select,

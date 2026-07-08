@@ -1,4 +1,4 @@
-import { Customer } from "../customer";
+import { Customer } from "../Customer/customer";
 import { ProductVariant } from "../product/productVariants";
 import { SerialNumberResponse } from "../product/serialNumber";
 

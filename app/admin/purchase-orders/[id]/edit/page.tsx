@@ -53,7 +53,7 @@ export default function EditPOPage() {
       approvePurchaseOrder.mutateAsync(poId, {
         onSuccess: (data) => {
           if (data.success) {
-            router.push("/admin/purchase-orders");
+            alert("Chấp nhận thành công")
           }
         },
       });

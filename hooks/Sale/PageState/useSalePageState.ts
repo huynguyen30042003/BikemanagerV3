@@ -273,15 +273,18 @@ export function useSalePageState() {
 					alert("Bán hàng thành công")
 				},
 				onSettled: () => {
-					router.refresh()	
+					router.push("admin/orders")	
 				},
 			});
 			return;
 		}
 		console.log(request);
 		createOrder.mutate(request, {
+			onSuccess: () => {
+				alert("Bán hàng thành công")
+			},
 			onSettled: () => {
-				router.push("/admin/sales");
+				router.push("/admin/orders");
 			},
 		});
 	};

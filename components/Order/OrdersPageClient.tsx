@@ -168,7 +168,7 @@ export default function OrdersPageClient() {
 							Quản lý tất cả đơn hàng
 						</p>
 					</div>
-					<Link href="/admin/orders/new">
+					<Link href="/admin/sales">
 						<Button className="gap-2">
 							<Plus size={18} />
 							Tạo đơn hàng
@@ -346,8 +346,7 @@ export default function OrdersPageClient() {
 							/>
 						</div>
 					</CardContent>
-				</Card>
-				<div className="flex flex-col gap-3 border-t px-4 py-6 md:flex-row md:items-center md:justify-between">
+				</Card><div className="flex flex-col gap-3 border-t px-4 py-6 md:flex-row md:items-center md:justify-between">
 					<div>
 						Trang {page} / {orders?.totalPages}
 					</div>
@@ -388,6 +387,7 @@ export default function OrdersPageClient() {
 						</Button>
 					</div>
 				</div>
+				{/*  */}
 			</div>
 	);
 }
