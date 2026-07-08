@@ -49,7 +49,7 @@ export default function NewCustomerPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button asChild variant="ghost" size="sm">
-          <Link href="/customers">
+          <Link href="/admin/customers">
             <ArrowLeft size={18} />
             Quay lại
           </Link>

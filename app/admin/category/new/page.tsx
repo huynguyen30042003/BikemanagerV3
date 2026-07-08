@@ -231,7 +231,7 @@ export default function CreateCategoryPage() {
             {/* Buttons */}
             <div className="flex gap-3 pt-4">
               <Button type="submit">Tạo danh mục</Button>
-              <Link href="/categories">
+              <Link href="/admin/categories">
                 <Button variant="outline">Hủy</Button>
               </Link>
             </div>

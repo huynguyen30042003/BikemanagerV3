@@ -21,6 +21,7 @@ export interface InventoryStockQuery {
 	WarehouseId?: string;
 	ProductVariantId?: string;
 	InStockOnly?: boolean;
+	TrackSerial?: boolean;
 	Page?: number;
 	PageSize?: number;
 }

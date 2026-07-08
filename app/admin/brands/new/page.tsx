@@ -60,7 +60,7 @@ export default function CreateBrandPage() {
     <div className="p-4 md:p-8 space-y-6">
       {/* Header */}
       <div>
-        <Link href="/brands">
+        <Link href="/admin/brands">
           <Button variant="outline" size="sm" className="mb-4">
             <ArrowLeft size={16} />
             <span>Quay lại</span>
@@ -154,7 +154,7 @@ export default function CreateBrandPage() {
               <Button type="submit">
                 Tạo thương hiệu
               </Button>
-              <Link href="/brands">
+              <Link href="/admin/brands">
                 <Button variant="outline">
                   Hủy
                 </Button>

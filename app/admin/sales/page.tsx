@@ -787,23 +787,19 @@ export default function CreateSalePage() {
 																	</div>
 																	<div className="space-y-2">
 																		<label className="text-sm font-medium">
-																			Tổng
-																			tiền
-																			hàng
+																			Tổng tiền hàng
 																		</label>
 																		<div className="px-3 py-2 border border-muted rounded-md bg-muted text-sm font-medium">
-																			{totalAmount.toLocaleString(
-																				"vi-VN",
-																			)}
+																			
+																			{formatCurrency(
+														totalAmount - discount,
+													)}
 																			đ
 																		</div>
 																	</div>
 																	<div className="space-y-2">
 																		<label className="text-sm font-medium">
-																			Số
-																			tiền
-																			trả
-																			trước
+																			Số tiền trả trước
 																		</label>
 																		<Input
 																			type="number"
@@ -817,9 +813,7 @@ export default function CreateSalePage() {
 																	</div>
 																	<div className="space-y-2">
 																		<label className="text-sm font-medium">
-																			Số
-																			tiền
-																			vay
+																			Số tiền vay
 																		</label>
 																		<Input
 																			type="number"
@@ -830,10 +824,7 @@ export default function CreateSalePage() {
 																	</div>
 																	<div className="space-y-2">
 																		<label className="text-sm font-medium">
-																			Số
-																			tháng
-																			trả
-																			góp
+																			Số tháng trả góp
 																		</label>
 																		<select
 																			{...register(
@@ -845,35 +836,27 @@ export default function CreateSalePage() {
 																			className="w-full px-3 py-2 border border-input rounded-md text-sm"
 																		>
 																			<option value="6">
-																				6
-																				tháng
+																				6 tháng
 																			</option>
 																			<option value="12">
-																				12
-																				tháng
+																				12 tháng
 																			</option>
 																			<option value="24">
-																				24
-																				tháng
+																				24 tháng
 																			</option>
 																			<option value="36">
-																				36
-																				tháng
+																				36 tháng
 																			</option>
 																		</select>
 																	</div>
 																	<div className="space-y-2">
 																		<label className="text-sm font-medium">
-																			Lãi
-																			suất
-																			(%)
+																			Lãi suất (%)
 																		</label>
 																		<Input
 																			type="number"
 																			step="0.1"
-																			min={
-																				0
-																			}
+																			min={0}
 																			{...register(
 																				"interestRate",
 																				{

@@ -20,7 +20,7 @@ export default function CreateSupplierPage() {
     <div className="p-4 md:p-8 max-w-2xl mx-auto space-y-8">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href="/suppliers">
+        <Link href="/admin/suppliers">
           <Button variant="outline" size="icon">
             <ArrowLeft size={20} />
           </Button>

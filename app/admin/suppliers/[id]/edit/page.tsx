@@ -25,7 +25,7 @@ export default function EditSupplierPage() {
     <div className="p-4 md:p-8 max-w-2xl mx-auto space-y-8">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href="/suppliers">
+        <Link href="/admin/suppliers">
           <Button variant="outline" size="icon">
             <ArrowLeft size={20} />
           </Button>
@@ -109,7 +109,7 @@ export default function EditSupplierPage() {
               <Button type="submit" className="flex-1">
                 Cập nhật nhà cung cấp
               </Button>
-              <Link href="/suppliers" className="flex-1">
+              <Link href="/admin/suppliers" className="flex-1">
                 <Button variant="outline" className="w-full">
                   Hủy
                 </Button>

@@ -157,7 +157,7 @@ export default function OrdersPageClient() {
 	];
 	if (isLoadingOrder) return <>loading...</>;
 	return (
-			<div className="p-4 md:p-8 space-y-8">
+			<div className="p-4 md:p-8  space-y-8  pb-0 md:pb-0 ">
 				{/* Header */}
 				<div className="flex items-center justify-between">
 					<div>
@@ -168,7 +168,7 @@ export default function OrdersPageClient() {
 							Quản lý tất cả đơn hàng
 						</p>
 					</div>
-					<Link href="/orders/new">
+					<Link href="/admin/orders/new">
 						<Button className="gap-2">
 							<Plus size={18} />
 							Tạo đơn hàng

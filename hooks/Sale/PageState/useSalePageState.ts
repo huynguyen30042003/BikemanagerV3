@@ -74,6 +74,7 @@ export function useSalePageState() {
 	} = useGetInventoryStockDetail({
 		WarehouseId: warehouseId === "all" ? undefined : warehouseId,
 		InStockOnly: true,
+		TrackSerial: false,
 		Page: page,
 		PageSize: pageSize,
 	});

@@ -1,4 +1,5 @@
 import { InstallmentProviderResponse } from "./installment-provider";
+import { orderRes } from "./order";
 
 export type installmentContractsParams = {
 	ProviderId?: string;
@@ -19,7 +20,9 @@ export interface InstallmentContractsRes {
 	monthlyPayment: number;
 	interestRate: number;
 	contractStatus: string;
+	createdAt: string;
 	installmentProvider: InstallmentProviderResponse;
+	order: orderRes;
 }
 export interface installmentProviderResponse {
 	id: string;

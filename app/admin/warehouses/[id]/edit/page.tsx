@@ -95,7 +95,7 @@ export default function EditWarehousePage() {
 
 						<div className="flex gap-4 pt-4">
 							<Button type="submit">Cập nhật</Button>
-							<Link href="/warehouses">
+							<Link href="/admin/warehouses">
 								<Button variant="outline">Hủy</Button>
 							</Link>
 						</div>

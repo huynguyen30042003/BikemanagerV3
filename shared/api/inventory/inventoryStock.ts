@@ -17,6 +17,7 @@ export const getInventoryStockDetail = async (
 		...(params.ProductVariantId && { BranchId: params.ProductVariantId }),
 		Page: params.Page ?? 1,
 		PageSize: params.PageSize ?? 10,
+		TrackSerial: params.TrackSerial,
 	};
 
 	const response = await api.get(`${APP_URL}/inventory-stocks/detail`, {

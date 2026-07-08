@@ -81,7 +81,7 @@ export default function CreateWarehousePage() {
             </div>
             <div className="flex gap-4 pt-4">
               <Button type="submit">Tạo kho hàng</Button>
-              <Link href="/warehouses">
+              <Link href="/admin/warehouses">
                 <Button variant="outline">Hủy</Button>
               </Link>
             </div>

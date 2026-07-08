@@ -248,7 +248,7 @@ function CustomerDetailPageClient() {
 			<div className="flex-1 min-h-screen">
 				<div className="px-8 h-16 border-b text-[24px] flex items-center justify-between">
 					<Button asChild variant="ghost" size="sm">
-						<Link href="/customers">
+						<Link href="/admin/customers">
 							<ArrowLeft size={18} />
 							Quay lại
 						</Link>

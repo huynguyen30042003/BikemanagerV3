@@ -75,7 +75,7 @@ export default function InstallmentProvidersPageClient() {
 							Quản lý các nhà cung cấp dịch vụ trả góp
 						</p>
 					</div>
-					<Link href="/installment-providers/new">
+					<Link href="/admin/installment-providers/new">
 						<Button className="gap-2">
 							<Plus size={18} />
 							Thêm nhà cung cấp

@@ -115,7 +115,7 @@ export default function InstallmentContractsPageClient() {
 							Quản lý tất cả hợp đồng trả góp
 						</p>
 					</div>
-					<Link href="/installment-contracts/new">
+					<Link href="/admin/installment-contracts/new">
 						<Button className="gap-2">
 							<Plus size={18} />
 							Thêm hợp đồng
