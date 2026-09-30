@@ -132,3 +132,24 @@ input[type="number"]::-webkit-inner-spin-button {
     @apply font-sans;
   }
 }
+.text-primary {
+  color: #2f302d
+}
+.text-secondary {
+  color: #9b9287
+}
+.text-header-primary {
+  color: #252724
+}
+.text-header-secondary {
+  color: #777067
+}
+.bg-primary {
+  background-color: #f7f5f1;
+}
+.bg-button-primary {
+  background-color: #fffdfa;
+}
+.bg-card {
+  background-color: #fffdfa
+}
