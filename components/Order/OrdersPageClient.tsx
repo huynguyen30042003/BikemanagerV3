@@ -10,12 +10,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { Trash2, Eye, Plus, Pencil } from "lucide-react";
+import { Trash2, Eye, Plus, Pencil, CalendarIcon } from "lucide-react";
 import { useGetOrder } from "@/hooks/Order/useOrder";
 import { useOrderPageState } from "@/hooks/Order/useOrderPageState";
 import { Column, Table } from "@/components/ui/Table";
 import { orderRes } from "@/types/order/order";
 import { useRouter } from "next/navigation";
+import { Calendar } from "../ui/calendar";
+import { format, formatDate } from "date-fns";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { useEffect } from "react";
 
 const formatCurrency = (value: number) => {
 	return new Intl.NumberFormat("vi-VN", {
@@ -40,19 +44,20 @@ export default function OrdersPageClient() {
 		orderStatus,
 		handleOrderStatus,
 		toDate,
-		handleToDate,
 		fromDate,
-		handleFromDate,
+		setFromDate,
+    	setToDate
 	} = useOrderPageState();
 	const { data: orders, isLoading: isLoadingOrder } = useGetOrder({
 		Search: searchTerm,
 		PaymentStatus: paymentStatus,
 		OrderStatus: orderStatus,
-		FromDate: fromDate,
-		ToDate: toDate,
+		FromDate: fromDate ? format(fromDate, "yyyy-MM-dd") : "",
+		ToDate: toDate ? format(toDate, "yyyy-MM-dd") : "",
 		Page: page,
 		PageSize: pageSize,
 	});
+
 	const stats = {
 		totalOrders: orders?.totalItems,
 		completedOrders: (orders?.items ?? []).filter(
@@ -121,6 +126,11 @@ export default function OrdersPageClient() {
 			key: "createdAt",
 			title: "Ngày mua",
 			classNameHeader: "text-left",
+			render: (_value, row) => (
+				<p>
+					{format(_value, "dd/MM/yyyy")}
+				</p>
+			),
 		},
 		{
 			key: "actions",
@@ -177,7 +187,7 @@ export default function OrdersPageClient() {
 				</div>
 
 				{/* Stats */}
-				<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 					<Card>
 						<CardHeader className="pb-2">
 							<CardTitle className="text-sm font-medium text-muted-foreground">
@@ -187,19 +197,6 @@ export default function OrdersPageClient() {
 						<CardContent>
 							<div className="text-2xl font-bold">
 								{stats.totalOrders}
-							</div>
-						</CardContent>
-					</Card>
-
-					<Card>
-						<CardHeader className="pb-2">
-							<CardTitle className="text-sm font-medium text-muted-foreground">
-								Hoàn thành
-							</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<div className="text-2xl font-bold">
-								{stats.completedOrders}
 							</div>
 						</CardContent>
 					</Card>
@@ -258,34 +255,58 @@ export default function OrdersPageClient() {
 								<label className="text-sm font-medium mb-2 block">
 									Từ ngày
 								</label>
+								<Popover>
+									<PopoverTrigger asChild>
+										<Button
+											variant="outline"
+											id="date-picker-range"
+											className="justify-start px-2.5 font-normal w-full"
+										>
+											<CalendarIcon />
+											{fromDate ? format(fromDate, "dd/MM/yyyy") :<span>Chọn ngày</span>}
+										</Button>
+									</PopoverTrigger>
 
-								<div className="relative ">
-									<Input
-										max={toDate || today}
-										type="date"
-										value={fromDate}
-										onChange={(e) =>
-											handleFromDate(e.target.value)
-										}
+									<PopoverContent className="w-auto p-0" align="start">
+									<Calendar
+										mode="single"
+										defaultMonth={fromDate}
+										selected={fromDate}
+										onSelect={setFromDate}
+										className="rounded-lg border"
+										captionLayout="dropdown"
 									/>
-								</div>
+									</PopoverContent>
+								</Popover>
 							</div>
 
 							<div>
 								<label className="text-sm font-medium mb-2 block">
 									Đến ngày
 								</label>
+								<Popover>
+									<PopoverTrigger asChild>
+										<Button
+											variant="outline"
+											id="date-picker-range"
+											className="justify-start px-2.5 font-normal w-full"
+										>
+											<CalendarIcon />
+											{toDate ? format(toDate, "dd/MM/yyyy") :<span>Chọn ngày</span>}
+										</Button>
+									</PopoverTrigger>
 
-								<div className="relative">
-									<Input
-										max={today}
-										type="date"
-										value={toDate}
-										onChange={(e) =>
-											handleToDate(e.target.value)
-										}
-									/>
-								</div>
+									<PopoverContent className="w-auto p-0" align="start">
+										<Calendar
+											mode="single"
+											defaultMonth={toDate}
+											selected={toDate}
+											onSelect={setToDate}
+											className="rounded-lg border"
+											captionLayout="dropdown"
+										/>
+									</PopoverContent>
+								</Popover>
 							</div>
 							<div>
 								<label className="text-sm font-medium mb-2 block">

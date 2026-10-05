@@ -544,7 +544,7 @@ export default function CreateSalePage() {
 									)}
 								</div>
 							</div>
-							<Button onClick={handleSearchCustomer}>
+							<Button onClick={handleSearchCustomer} type="button">
 								Tìm kiếm
 							</Button>
 						</CardContent>

@@ -7,7 +7,7 @@ import { z } from "zod";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
-
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,11 +30,9 @@ import {
   useGetProductById,
   useUpdateProduct,
 } from "@/hooks/Product/useProduct";
-import { Image } from "@/components/ui/image";
 import { CategoryDto } from "@/types/product/category";
 import { brandRes } from "@/types/product/brand";
 import { PRODUCT_TYPES, ProductType } from "@/types/product/product";
-import { BE_URL } from "@/shared/constants/apiConstants";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -135,10 +133,11 @@ function EditProductForm({
   brands: brandRes[];
 }) {
   const router = useRouter();
-  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(
-    `${BE_URL}/${product.thumbnailUrl}`,
+  const [thumbnailPreview, setThumbnailPreview] = useState<string>(
+    !!product?.thumbnailUrl ? `https://localhost:5001${product?.thumbnailUrl}`: "",
   );
-
+  console.log("thumbnailPreview",thumbnailPreview);
+  
   const { mutateAsync: updateProduct, isPending } = useUpdateProduct();
 
   const form = useForm({
@@ -182,7 +181,7 @@ function EditProductForm({
 
   const clearThumbnail = () => {
     setValue("thumbnail", null);
-    setThumbnailPreview(product.thumbnailUrl ?? null);
+    setThumbnailPreview(product.thumbnailUrl ?? "");
   };
 
   const onSubmit = async (values: FormValues) => {
@@ -211,7 +210,7 @@ function EditProductForm({
   const brandId = watch("brandId");
   const productType = watch("productType");
   const categoryId = watch("categoryId");
-
+  
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -287,7 +286,10 @@ function EditProductForm({
                 <div className="relative w-full max-w-xs">
                   <Image
                     src={thumbnailPreview}
+                    width={200}
+										height={200}
                     alt="Preview"
+										unoptimized
                     className="h-48 w-full rounded-lg border object-cover"
                   />
                   {isOriginalImage && (
@@ -466,9 +468,7 @@ export default function EditProductPage() {
     !!product &&
     !isLoadingProduct &&
     !isLoadingCategories &&
-    !isLoadingBrands &&
-    categories.length > 0 &&
-    brands.length > 0;
+    !isLoadingBrands;
 
   if (isLoadingProduct || isLoadingCategories || isLoadingBrands) {
     return <div className="p-8">Đang tải...</div>;
@@ -497,12 +497,12 @@ export default function EditProductPage() {
         <p className="text-muted-foreground">Cập nhật thông tin sản phẩm</p>
       </div>
 
-      <EditProductForm
+      {!!product && <EditProductForm
         key={product.id}
         product={product as ProductForEdit}
         categories={categories}
         brands={brands}
-      />
+      />}
     </div>
   );
 }

@@ -120,7 +120,6 @@ input[type="number"]::-webkit-inner-spin-button {
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -131,6 +130,9 @@ input[type="number"]::-webkit-inner-spin-button {
   html {
     @apply font-sans;
   }
+}
+body {
+	font-family: var(--font-roboto), sans-serif;
 }
 .text-primary {
   color: #2f302d
@@ -148,8 +150,18 @@ input[type="number"]::-webkit-inner-spin-button {
   background-color: #f7f5f1;
 }
 .bg-button-primary {
-  background-color: #fffdfa;
+  background-color: #fff6e4;
 }
 .bg-card {
   background-color: #fffdfa
+}
+.bg-thead {
+  background-color: #f8f5f0;
+}
+.bg-highlight {
+  background-color: #f6f2ec;
+}
+.success {
+  background-color: #dceee1;
+  color: #2b7750;
 }

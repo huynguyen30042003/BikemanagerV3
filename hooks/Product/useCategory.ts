@@ -5,13 +5,14 @@ import {
   createCategory,
   updateCategory,
   deleteCategory,
+  getDanhMucChung,
 } from "@/shared/api/product/category.api"
-import { CreateCategoryRequest, UpdateCategoryRequest } from "@/types/product/category";
+import { CategoryQuery, CreateCategoryRequest, UpdateCategoryRequest } from "@/types/product/category";
 
 export const CATEGORY_KEYS = {
   all: ["categories"] as const,
   list: (params?: object) => [...CATEGORY_KEYS.all, "list", params] as const,
-  detail: (id: string) => [...CATEGORY_KEYS.all, "detail", id] as const,
+  detail: (id: number) => [...CATEGORY_KEYS.all, "detail", id] as const,
 };
 
 export const useGetCategories = (params?: {
@@ -24,7 +25,15 @@ export const useGetCategories = (params?: {
 
   });
 
-export const useGetCategoryById = (id: string) =>
+export const useGetDanhMucChung = (params: CategoryQuery, requireParentId = false) =>
+  useQuery({
+    queryKey: CATEGORY_KEYS.list(params),
+    queryFn: () => getDanhMucChung(params),
+    staleTime: 1000 * 60 * 10,
+    enabled: !requireParentId || !!params.parentId,
+  });
+
+export const useGetCategoryById = (id: number) =>
   useQuery({
     queryKey: CATEGORY_KEYS.detail(id),
     queryFn: () => getCategoryById(id),
@@ -45,7 +54,7 @@ export const useUpdateCategory = () => {
     mutationFn: (body: UpdateCategoryRequest) => updateCategory(body),
     onSuccess: (_data, vars) => {
       qc.invalidateQueries({ queryKey: CATEGORY_KEYS.all });
-      qc.invalidateQueries({ queryKey: CATEGORY_KEYS.detail(vars.id) });
+      qc.invalidateQueries({ queryKey: CATEGORY_KEYS.detail((vars.id)) });
     },
   });
 };
@@ -53,7 +62,7 @@ export const useUpdateCategory = () => {
 export const useDeleteCategory = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => deleteCategory(id),
+    mutationFn: (id: number) => deleteCategory(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: CATEGORY_KEYS.all }),
   });
 };

@@ -30,5 +30,7 @@ export const useGetInstallmentContractByOrderId = (
     queryFn: () => getInstallmentContractByOrderId(orderId),
     refetchOnWindowFocus: false,
     enabled: !!orderId,
+    staleTime: 1000 * 60 * 5  
+
   });
 };

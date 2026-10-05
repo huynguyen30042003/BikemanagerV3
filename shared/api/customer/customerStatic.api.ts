@@ -30,3 +30,4 @@ export const getCustomerStatistic = async (
 
 	return response.data;
 };
+

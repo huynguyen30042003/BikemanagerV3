@@ -98,7 +98,7 @@ export const updateSerialNumber = async (
 			return [key, value === undefined || value === "" ? null : value];
 		}),
 	);
-	const response = await api.put(
+	const response = await api.patch(
 		`${APP_URL}/serial-numbers/${payload.id}`,
 		normalizedPayload,
 		{

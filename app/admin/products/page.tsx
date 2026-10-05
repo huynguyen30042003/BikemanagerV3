@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 import {
   Select,
   SelectContent,
@@ -31,9 +32,7 @@ import { useGetCategories } from "@/hooks/Product/useCategory";
 import { PRODUCT_TYPES, ProductSimpleDto, ProductType } from "@/types/product/product";
 import { useDebounceSearch } from "@/hooks/useDebounceSearch";
 import { Column, Table } from "@/components/ui/Table";
-import { Image } from "@/components/ui/image";
 import { CategoryDto } from "@/types/product/category";
-import { BE_URL } from "@/shared/constants/apiConstants";
 
 export default function ProductsPage() {
   const router = useRouter();
@@ -76,12 +75,23 @@ export default function ProductsPage() {
     {
       key: "thumbnailUrl",
       title: "Ảnh",
-      render: (val) =>
-        val ? (
-          <Image src={`${BE_URL}/${val}`} alt="thumb" className="h-10 w-10 rounded object-cover" />
+      render: (val) => {
+        const linkImage = val
+          ? `https://localhost:5001${val}`
+          : "";
+
+        return linkImage ? (
+          <Image
+            src={linkImage}
+            alt="thumb"
+            className="h-10 w-10 rounded object-cover"
+            width={40}
+            height={40}
+          />
         ) : (
           <div className="h-10 w-10 rounded bg-muted" />
-        ),
+        );
+      },
     },
     { key: "name", title: "Tên sản phẩm", classNameHeader: "text-left" },
     { key: "sku", title: "SKU", classNameHeader: "text-left" },

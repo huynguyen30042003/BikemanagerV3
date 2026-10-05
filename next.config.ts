@@ -9,7 +9,7 @@ const nextConfig = {
         protocol: "https",
         hostname: "localhost",
         port: "5001",
-        pathname: "/media/**",
+        pathname: "/uploads/**",
       },
     ],
     dangerouslyAllowLocalIP: true,

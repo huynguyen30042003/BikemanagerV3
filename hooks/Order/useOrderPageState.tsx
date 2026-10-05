@@ -17,15 +17,8 @@ export function useOrderPageState() {
   );
   const [paymentStatus, setPaymentStatus] = useState<string>("");
   const [orderStatus, setOrderStatus] = useState<string>("");
-  const [fromDate, setFromDate] = useState(() => {
-    const date = new Date();
-    date.setDate(date.getDate() - 7);
-    return date.toISOString().split("T")[0];
-  });
-
-  const [toDate, setToDate] = useState(() => {
-    return new Date().toISOString().split("T")[0];
-  });
+  const [fromDate, setFromDate] = useState<Date>();
+  const [toDate, setToDate] = useState<Date>();
   const pageSize = Number(searchParams.get("pageSize")) || DEFAULT_PAGE_SIZE;
 
   const { searchInput, searchTerm, setSearchInput } = useDebounceSearch({
@@ -40,8 +33,6 @@ export function useOrderPageState() {
     if (searchTerm) query.set("search", searchTerm);
     if (paymentStatus) query.set("paymentStatus", paymentStatus);
     if (orderStatus) query.set("orderStatus", orderStatus);
-    if (fromDate) query.set("fromDate", fromDate);
-    if (toDate) query.set("toDate", toDate);
     query.set("page", page.toString());
     query.set("pageSize", pageSize.toString());
 
@@ -70,14 +61,6 @@ export function useOrderPageState() {
     setOrderStatus(value);
     setPage(DEFAULT_PAGE);
   };
-  const handleFromDate = (value: string) => {
-    setFromDate(value);
-    setPage(DEFAULT_PAGE);
-  };
-  const handleToDate = (value: string) => {
-    setToDate(value);
-    setPage(DEFAULT_PAGE);
-  };
 
   return {
     page,
@@ -91,8 +74,8 @@ export function useOrderPageState() {
     orderStatus,
     handleOrderStatus,
     toDate,
-    handleToDate,
     fromDate,
-    handleFromDate,
+    setFromDate,
+    setToDate
   };
 }

@@ -18,3 +18,4 @@ export const useGetCustomersStatic = (
     refetchOnWindowFocus: false,
   });
 };
+

@@ -95,9 +95,12 @@ export function useGoodsReceiptPageState() {
       receivePurchaseOrder.mutate({
         id: poId,
         serials: request,
-      },{onSuccess:()=> {
-        alert("receive successfull")
-        router.push("/admin/purchase-orders")
+      },{onSuccess:(res)=> {
+        if (res.success){
+          router.push("/admin/purchase-orders")
+        }else{
+          console.log(res.message);
+        }
       }})
     } catch {
       alert("receive fail")

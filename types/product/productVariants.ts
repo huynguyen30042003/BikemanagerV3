@@ -63,7 +63,9 @@ export interface ProductVariant {
   wholesalePrice: number;
   stockQuantity: number;
   warrantyMonths: number;
+  trackSerial: boolean
   product: Product;
+  image?: string | null
 }
 import { ProductSimpleDto } from "./product";
 
@@ -81,6 +83,7 @@ export interface ProductVariantResponse {
   warrantyMonths: number;
   trackSerial: boolean;
   product?: ProductSimpleDto | null;
+  image?: string | null
 }
 
 export interface CreateProductVariantRequest {
@@ -93,6 +96,7 @@ export interface CreateProductVariantRequest {
   wholesalePrice: number;
   stockQuantity: number;
   warrantyMonths: number;
+	Image?: File;
 }
 
 export interface UpdateProductVariantRequest extends CreateProductVariantRequest {

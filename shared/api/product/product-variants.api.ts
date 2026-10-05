@@ -91,8 +91,22 @@ export const createProductVariant = async (
   payload: CreateProductVariantRequest,
 ) => {
   const token = getAccessToken();
-  const response = await api.post(`${APP_URL}/product-variants`, payload, {
-    headers: { Authorization: `Bearer ${token}` },
+  const formData = new FormData();
+  formData.append("ProductId", payload.productId);
+  formData.append("Color", payload?.color ?? "");
+  formData.append("Battery", payload.battery ?? "");
+  formData.append("MotorPower", payload.motorPower ?? "");
+  formData.append("ImportPrice", payload.importPrice.toString());
+  formData.append("SellingPrice", payload.sellingPrice.toString());
+  formData.append("WholesalePrice", payload.wholesalePrice.toString());
+  formData.append("StockQuantity", payload.stockQuantity.toString());
+  formData.append("WarrantyMonths", payload.warrantyMonths.toString());
+  if (payload.Image) formData.append("Image", payload.Image);
+  const response = await api.post(`${APP_URL}/product-variants`, formData, {
+    headers: { 
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+   },
   });
  
   return response.data;

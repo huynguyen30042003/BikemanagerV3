@@ -25,6 +25,7 @@ export interface orderRes {
   orderStatus: string;
   createdBy: string;
   createdAt: string;
+  updatedAt: string;
   customer: Customer
 }
 

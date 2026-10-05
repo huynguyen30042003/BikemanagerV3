@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -50,8 +50,68 @@ export default function SiderBarAdmin() {
 
   const [isClose, setIsClose] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [sidebarWidth, setSidebarWidth] = useState(288);
+  const [isResizing, setIsResizing] = useState(false);
 
+  const sidebarRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+  if (!isResizing) return;
+
+  const handleMouseMove = (e: MouseEvent) => {
+    const newWidth = e.clientX;
+
+    // Giới hạn width
+    const minWidth = 80;
+    const maxWidth = 400;
+
+    const width = Math.min(
+      Math.max(newWidth, minWidth),
+      maxWidth
+    );
+
+    setSidebarWidth(width);
+
+    // Kéo nhỏ → tự đóng
+    if (width <= 120) {
+      setIsClose(true);
+    }
+
+    // Kéo rộng → tự mở
+    if (width > 180) {
+      setIsClose(false);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsResizing(false);
+  };
+
+  document.addEventListener("mousemove", handleMouseMove);
+  document.addEventListener("mouseup", handleMouseUp);
+
+  return () => {
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
+  };
+}, [isResizing]);
   const router: MenuGroup[] = [
+    {
+      title: "Danh mục",
+      href: "/admin/danhMucChung",
+      icon: Users,
+      items: [
+        {
+          title: "Danh mục chung",
+          href: "/admin/danhMucChung",
+          icon: Users,
+        },
+        {
+          title: "Danh mục chi tiết",
+          href: "/admin/danhMucChiTiet",
+          icon: Star,
+        },
+      ],
+    },
     {
       title: "Khách hàng",
       href: "/admin/customer",
@@ -173,14 +233,36 @@ export default function SiderBarAdmin() {
       setOpenMenu(activeGroup.title);
     }
   }, [pathname]);
+useEffect(() => {
+  const handleResize = () => {
+    if (window.innerWidth < 1024) {
+      // Tablet + mobile → tự đóng
+      setIsClose(true);
+    } else {
+      // Desktop → tự mở
+      setIsClose(false);
+    }
+  };
 
+  // Chạy ngay khi component render
+  handleResize();
+
+  window.addEventListener("resize", handleResize);
+
+  return () => {
+    window.removeEventListener("resize", handleResize);
+  };
+}, []);
   return (
     <aside
+      ref={sidebarRef} // [THÊM]
+      style={{
+        width: isClose ? 80 : sidebarWidth, // [THÊM]
+      }}
       className={`
         sticky top-0 h-screen
-        border-r bg-white
-        transition-all duration-300
-        ${isClose ? "w-20" : "w-72"}
+        border-r bg-card
+        ${!isResizing ? "transition-all duration-300" : ""} 
       `}
     >
       {/* Header */}
@@ -219,7 +301,7 @@ export default function SiderBarAdmin() {
                       )
                     }
                     className={`
-              w-full rounded-xl px-3 py-3
+              w-full rounded-xl px-3 py-2
               flex items-center transition-colors
               ${
                 isParentActive
@@ -292,7 +374,7 @@ export default function SiderBarAdmin() {
                 <Link
                   href={item.href}
                   className={`
-            w-full rounded-xl px-3 py-3
+            w-full rounded-xl px-3 py-2
             flex items-center gap-3
             transition-colors
             ${
@@ -316,6 +398,20 @@ export default function SiderBarAdmin() {
       </div>
 
       {/* Toggle */}
+      <div
+  onMouseDown={() => setIsResizing(true)}
+  className="
+    absolute
+    top-0
+    right-0
+    h-full
+    w-1
+    cursor-col-resize
+    hover:bg-blue-400
+    transition-colors
+    z-10
+  "
+/>
       <Button
         variant="outline"
         size="icon"

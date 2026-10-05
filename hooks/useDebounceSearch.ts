@@ -64,7 +64,18 @@ export const useDebounceSearch = (
 
   const [searchTerm, setSearchTerm] =
     useState(initialValue);
+  useEffect(() => {
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSearchInput(
+        initialValue
+    );
+
+    setSearchTerm(
+        initialValue
+    );
+
+  }, [initialValue]);
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearchTerm(searchInput);

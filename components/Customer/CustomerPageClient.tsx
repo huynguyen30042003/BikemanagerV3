@@ -228,7 +228,7 @@ function CustomerPageClient() {
 				</div>
 
 				{/* Pagination */}
-				<div className="flex items-center justify-between px-8 py-6">
+				<div className="flex items-center justify-between">
 					<div>
 						Trang {page} / {totalPages}
 					</div>

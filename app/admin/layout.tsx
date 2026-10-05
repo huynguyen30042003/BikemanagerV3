@@ -9,7 +9,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   return (
     <div className="w-full min-h-screen flex">
       <SiderBarAdmin/>
-      <div className='flex-1 min-h-screen'>
+      <div className='flex-1 min-h-screen bg-primary'>
         {children}
       </div>
     </div>

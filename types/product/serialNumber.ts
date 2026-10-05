@@ -32,6 +32,7 @@ export interface CreateSerialNumberRequest {
 	warrantyEnd?: string | null;
 	currentStatus?: CurrentStatus | null;
 	warehouseId?: string | null;
+	frameNumber?: string | null;
 }
 
 export interface UpdateSerialNumberRequest extends CreateSerialNumberRequest {

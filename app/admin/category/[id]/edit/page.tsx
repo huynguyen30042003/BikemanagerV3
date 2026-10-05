@@ -87,6 +87,10 @@ function CategoryEditForm({
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
+            <Input
+                name="parentId"
+                className="hidden"
+              />
             {/* Name */}
             <div className="space-y-2">
               <label className="text-sm font-medium">Tên danh mục *</label>
@@ -169,6 +173,7 @@ export default function EditCategoryPage() {
       key={categoryId}
       initialValues={{
         id: categoryId,
+        parentId: categoryData.data.parentId,
         name: categoryData.data.name ?? '',
         slug: categoryData.data.slug ?? '',
       }}
