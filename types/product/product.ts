@@ -1,11 +1,10 @@
 import { CategoryDto } from "./category";
 import { brandRes } from "./brand";
 
-export type ProductType = "Bicycle" | "ElectricBike" | "Scooter" | "Other";
 
 export interface ProductSimpleDto {
   id: string;
-  categoryId: string;
+  categoryId: number;
   brandId: string;
   sku: string;
   barcode?: string | null;
@@ -14,7 +13,7 @@ export interface ProductSimpleDto {
   shortDescription?: string | null;
   description?: string | null;
   thumbnailUrl?: string | null;
-  productType: ProductType;
+  isVerhicle: boolean
   isPublished: boolean;
   category?: CategoryDto | null;
   brand?: brandRes | null;
@@ -22,15 +21,15 @@ export interface ProductSimpleDto {
 }
 
 export interface CreateProductRequest {
-  categoryId: string;
+  categoryId: number;
   brandId: string;
   name: string;
   slug: string;
   shortDescription?: string | null;
   description?: string | null;
   thumbnail?: File | null;
-  productType: string;
   isPublished: boolean;
+  isVerhicle: boolean
 }
 export interface Variant {
   id?: string;
@@ -45,21 +44,11 @@ export interface UpdateProductRequest extends CreateProductRequest {
 
 export interface ProductQuery {
   search?: string;
-  categoryId?: string;
+  categoryId?: number;
   brandId?: string;
   isPublished?: boolean;
-  productType?: ProductType;
   sortBy?: string;
   sortOrder?: string;
   page: number;
   pageSize: number;
 }
-
-export const PRODUCT_TYPES = [
-  { value: "Bicycle", label: "Xe đạp", number: 1 },
-  { value: "ElectricBicycle", label: "Xe đạp điện", number: 2 },
-  { value: "Motorcycle", label: "Xe máy" , number: 3},
-  { value: "ElectricMotorcycle", label: "Xe máy điện", number: 4 },
-  { value: "Part", label: "Phụ Tùng" , number: 5},
-  { value: "Accessory", label: "Phụ Kiện", number: 6},
-] as const;

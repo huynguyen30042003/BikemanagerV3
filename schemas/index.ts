@@ -22,9 +22,6 @@ export const productSchema = z.object({
   shortDescription: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
   thumbnail: z.instanceof(File).nullable().optional(),
-  productType: z
-    .enum(["Bicycle", "ElectricBike", "Scooter", "Other"])
-    .default("Bicycle"),
   isPublished: z.boolean().default(false),
 });
 

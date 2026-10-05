@@ -13,7 +13,6 @@ export const getProducts = async (params: ProductQuery) => {
     ...(params.categoryId && { categoryId: params.categoryId }),
     ...(params.brandId && { brandId: params.brandId }),
     ...(params.isPublished !== undefined && { isPublished: params.isPublished }),
-    ...(params.productType && { productType: params.productType }),
     ...(params.sortBy && { sortBy: params.sortBy }),
     ...(params.sortOrder && { sortOrder: params.sortOrder }),
     page: params.page ?? 1,
@@ -41,11 +40,10 @@ export const createProduct = async (payload: CreateProductRequest) => {
   const token = getAccessToken();
   const formData = new FormData();
 
-  formData.append("categoryId", payload.categoryId);
+  formData.append("categoryId", String(payload.categoryId));
   formData.append("brandId", payload.brandId);
   formData.append("name", payload.name);
   formData.append("slug", payload.slug);
-  formData.append("productType", payload.productType);
   formData.append("isPublished", String(payload.isPublished ?? false));
 
   if (payload.shortDescription) formData.append("shortDescription", payload.shortDescription);
@@ -66,11 +64,10 @@ export const updateProduct = async (payload: UpdateProductRequest) => {
   const token = getAccessToken();
   const formData = new FormData();
 
-  formData.append("categoryId", payload.categoryId);
+  formData.append("categoryId",String(payload.categoryId));
   formData.append("brandId", payload.brandId);
   formData.append("name", payload.name);
   formData.append("slug", payload.slug);
-  formData.append("productType", payload.productType);
   formData.append("isPublished", String(payload.isPublished ?? false));
 
   if (payload.shortDescription) formData.append("shortDescription", payload.shortDescription);

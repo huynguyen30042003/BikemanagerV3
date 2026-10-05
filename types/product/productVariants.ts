@@ -46,7 +46,6 @@ export interface Product {
   shortDescription: string;
   description: string;
   thumbnailUrl: string | null;
-  productType: number;
   category: Category;
   brand: Brand;
 }

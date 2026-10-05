@@ -13,22 +13,12 @@
   import { Label } from "@/components/ui/label";
   import { Textarea } from "@/components/ui/textarea";
   import { Switch } from "@/components/ui/switch";
-  import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select";
   import { Card, CardContent } from "@/components/ui/card";
   import { ArrowLeft, ImagePlus, X } from "lucide-react";
-
-  import { useGetCategories, useGetDanhMucChung } from "@/hooks/Product/useCategory";
+  import { useGetDanhMucChung } from "@/hooks/Product/useCategory";
   import { useGetBrands } from "@/hooks/Product/useBrand";
   import { useCreateProduct } from "@/hooks/Product/useProduct";
   import { Image } from "@/components/ui/image";
-  import { CategorySelect } from "@/components/Product/Category/CategorySelect";
-  import { PRODUCT_TYPES } from "@/types/product/product";
   import { brandRes } from "@/types/product/brand";
   import { SearchSelect } from "@/components/ui/selectSearch";
   import { Skeleton } from "@/components/ui/skeleton";
@@ -43,7 +33,6 @@
     shortDescription: z.string().optional(),
     description: z.string().optional(),
     thumbnail: z.instanceof(File).optional().nullable(),
-    productType: z.string().min(1, "Vui lòng chọn loại sản phẩm").max(50),
     isPublished: z.boolean().default(false),
     isVerhicle:z.boolean().default(true),
   });
@@ -274,7 +263,7 @@
                             },
                           )}
                         value={watch("brandId") ?? ""}
-                        onChange={(v) => setValue("brandId", v)}
+                        onChange={(v) => setValue("brandId", String(v))}
                       />
                     )}
                     {errors.brandId && (

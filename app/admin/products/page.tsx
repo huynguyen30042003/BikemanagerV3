@@ -6,13 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -28,17 +21,18 @@ import { Plus, Pencil, Trash2, Search, Eye } from "lucide-react";
 import { toast } from "sonner";
 
 import { useGetProducts, useDeleteProduct } from "@/hooks/Product/useProduct";
-import { useGetCategories } from "@/hooks/Product/useCategory";
-import { PRODUCT_TYPES, ProductSimpleDto, ProductType } from "@/types/product/product";
+import { useGetDanhMucChung } from "@/hooks/Product/useCategory";
+import { ProductSimpleDto } from "@/types/product/product";
 import { useDebounceSearch } from "@/hooks/useDebounceSearch";
 import { Column, Table } from "@/components/ui/Table";
-import { CategoryDto } from "@/types/product/category";
+import { DanhMucChungResponse } from "@/types/product/category";
+import { SearchSelect } from "@/components/ui/selectSearch";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProductsPage() {
   const router = useRouter();
   const [page] = useState(1);
-  const [categoryId, setCategoryId] = useState<string>("all");
-  const [productType, setProductType] = useState<ProductType | "all">("all");
+  const [categoryId, setCategoryId] = useState<number>();
   const [toDelete, setToDelete] = useState<ProductSimpleDto | null>(null);
 
   const { searchInput, searchTerm, setSearchInput } = useDebounceSearch({
@@ -47,14 +41,19 @@ export default function ProductsPage() {
 
   const { data: productsData } = useGetProducts({
     search: searchTerm,
-    categoryId: categoryId === "all" ? undefined : categoryId,
-    productType: productType === "all" ? undefined : productType,
+    categoryId: categoryId,
     page,
     pageSize: 20,
   });
-
-  const { data: categoriesData } = useGetCategories();
-  const categories = categoriesData?.items ?? [];
+const { data: categoriesData, isLoading: isLoadingDanhMucChiTiet } = useGetDanhMucChung(
+      {
+        search: "",
+        parentId: 4,
+        page: 0,
+        pageSize: 100,
+      },
+      true,
+    );
   const products = productsData?.items ?? [];
 
   const { mutateAsync: deleteProduct, isPending: isDeleting } =
@@ -106,15 +105,6 @@ export default function ProductsPage() {
       title: "Thương hiệu",
       classNameHeader: "text-left",
       accessor: (row) => row.brand?.name ?? "—",
-    },
-    {
-      key: "productType",
-      title: "Loại",
-      render: (val) => (
-        <Badge variant="outline">
-          {PRODUCT_TYPES.find((t) => t.number === val)?.label ?? val}
-        </Badge>
-      ),
     },
     {
       key: "isPublished",
@@ -187,21 +177,25 @@ export default function ProductsPage() {
               onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
-
-          <Select value={categoryId} onValueChange={setCategoryId}>
-            <SelectTrigger className="w-44">
-              <SelectValue placeholder="Danh mục" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Tất cả danh mục</SelectItem>
-              {categories.map((c: CategoryDto) => (
-                <SelectItem key={c.id} value={c.id}>
-                  {c.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
+          <div className="col-span-2 flex flex-col gap-1">
+            <label>
+              Loại sản phẩm
+              <span className="text-red-600"> *</span>
+            </label>
+            {isLoadingDanhMucChiTiet ? (
+              <Skeleton className="h-10 flex-1" />
+            ) : (
+              <SearchSelect
+                options={categoriesData?.items?.map(
+                    (prev: DanhMucChungResponse) => {
+                      return { value: prev.id, label: prev.name };
+                    },
+                  )}
+                value={categoryId}
+                onChange={(id) => setCategoryId(+id)}
+              />
+            )}
+          </div>
         </CardContent>
       </Card>
 

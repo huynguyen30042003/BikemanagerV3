@@ -58,7 +58,6 @@ import {
   SerialNumberFormValues,
 } from "@/schemas";
 import { useQueryClient } from "@tanstack/react-query";
-import { PRODUCT_TYPES } from "@/types/product/product";
 import Image from "next/image";
 
 export default function ProductDetailPage() {
@@ -440,15 +439,6 @@ export default function ProductDetailPage() {
 						</p>
 					</div>
 					<div>
-						<p className="text-sm text-muted-foreground">Loại</p>
-						<p className="font-medium">
-							{" "}
-							{PRODUCT_TYPES.find(
-								(t) => t.number === product.productType,
-							)?.label ?? product.productType}
-						</p>
-					</div>
-					<div>
 						<p className="text-sm text-muted-foreground">
 							Trạng thái
 						</p>
@@ -563,7 +553,7 @@ export default function ProductDetailPage() {
 									label: "Giá sỉ *",
 									type: "number",
 								},
-								...(product.productType >= 4
+								...(product.isVerhicel >= 4
 									? [
 											{
 												name: "stockQuantity",

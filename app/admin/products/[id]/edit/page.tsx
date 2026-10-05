@@ -22,38 +22,38 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, ImagePlus, X } from "lucide-react";
-import { CategorySelect } from "@/components/Product/Category/CategorySelect";
 
-import { useGetCategories } from "@/hooks/Product/useCategory";
+import { useGetCategories, useGetDanhMucChung } from "@/hooks/Product/useCategory";
 import { useGetBrands } from "@/hooks/Product/useBrand";
 import {
   useGetProductById,
   useUpdateProduct,
 } from "@/hooks/Product/useProduct";
-import { CategoryDto } from "@/types/product/category";
+import { CategoryDto, DanhMucChungResponse } from "@/types/product/category";
 import { brandRes } from "@/types/product/brand";
-import { PRODUCT_TYPES, ProductType } from "@/types/product/product";
+import { Skeleton } from "@/components/ui/skeleton";
+import { SearchSelect } from "@/components/ui/selectSearch";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 // ─── Schema ───────────────────────────────────────────────────────────────────
 const schema = z.object({
-  categoryId: z.string().uuid("Vui lòng chọn danh mục"),
+  categoryId: z.number().min(1,"Vui lòng chọn danh mục"),
   brandId: z.string().uuid("Vui lòng chọn thương hiệu"),
   name: z.string().min(1, "Tên sản phẩm là bắt buộc").max(255),
   slug: z.string().min(1, "Slug là bắt buộc").max(255),
   shortDescription: z.string().optional(),
   description: z.string().optional(),
   thumbnail: z.instanceof(File).optional().nullable(),
-  productType: z.string().min(1, "Vui lòng chọn loại sản phẩm"),
   isPublished: z.boolean().default(false),
+  isVerhicle: z.boolean().default(true),
 });
 
 type FormValues = z.infer<typeof schema>;
 
 type ProductForEdit = {
   id: string;
-  categoryId: string;
+  categoryId: number;
   brandId?: string | null;
   brand?: { id: string; name?: string } | null;
   sku: string;
@@ -63,27 +63,9 @@ type ProductForEdit = {
   shortDescription?: string | null;
   description?: string | null;
   thumbnailUrl?: string | null;
-  productType: ProductType;
   isPublished: boolean;
+  isVerhicle: boolean;
 };
-
-function resolveProductType(productType: unknown): string {
-  if (typeof productType === "number") {
-    return (
-      PRODUCT_TYPES.find((t) => t.number === productType)?.value ?? "Bicycle"
-    );
-  }
-  if (typeof productType === "string") {
-    const byValue = PRODUCT_TYPES.find((t) => t.value === productType);
-    if (byValue) return byValue.value;
-    const byLabel = PRODUCT_TYPES.find(
-      (t) => t.label.toLowerCase() === productType.toLowerCase(),
-    );
-    if (byLabel) return byLabel.value;
-    return productType;
-  }
-  return "Bicycle";
-}
 
 function buildDefaultValues(product: ProductForEdit): FormValues {
   return {
@@ -93,8 +75,8 @@ function buildDefaultValues(product: ProductForEdit): FormValues {
     slug: product.slug,
     shortDescription: product.shortDescription ?? "",
     description: product.description ?? "",
-    productType: resolveProductType(product.productType),
     isPublished: product.isPublished,
+    isVerhicle: product.isVerhicle,
     thumbnail: null,
   };
 }
@@ -139,7 +121,15 @@ function EditProductForm({
   console.log("thumbnailPreview",thumbnailPreview);
   
   const { mutateAsync: updateProduct, isPending } = useUpdateProduct();
-
+  const { data: categoriesData, isLoading: isLoadingDanhMucChiTiet } = useGetDanhMucChung(
+    {
+      search: "",
+      parentId: 4,
+      page: 0,
+      pageSize: 100,
+    },
+    true,
+  );
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: buildDefaultValues(product),
@@ -208,7 +198,6 @@ function EditProductForm({
   const hasPreview = !!thumbnailPreview;
   const isOriginalImage = hasPreview && !isNewFile;
   const brandId = watch("brandId");
-  const productType = watch("productType");
   const categoryId = watch("categoryId");
   
   return (
@@ -339,18 +328,29 @@ function EditProductForm({
             <CardContent className="space-y-5 pt-6">
               <h2 className="text-base font-semibold">Phân loại</h2>
 
-              <div className="space-y-1.5">
-                <Label>Danh mục *</Label>
-                <CategorySelect
-                  categories={categories}
-                  value={categoryId}
-                  onChange={(value) =>
-                    setValue("categoryId", value, { shouldValidate: true })
-                  }
-                  placeholder="Chọn danh mục"
-                  error={errors.categoryId?.message}
-                />
-              </div>
+              <div className="col-span-2 flex flex-col gap-1">
+                    <label>
+                      Loại sản phẩm
+                      <span className="text-red-600"> *</span>
+                    </label>
+                    {isLoadingDanhMucChiTiet ? (
+                      <Skeleton className="h-10 flex-1" />
+                    ) : (
+                      <SearchSelect
+                        options={categoriesData?.items?.map(
+                            (prev: DanhMucChungResponse) => {
+                              return { value: prev.id, label: prev.name };
+                            },
+                          )}
+                        value={watch("categoryId")}
+                        onChange={(id) => setValue("categoryId", +id, { shouldValidate: true })}
+                      />
+                    )}
+                    {errors.categoryId && (
+                      <p className="text-xs text-destructive">{errors.categoryId.message}</p>
+                    )}
+                  </div>
+
 
               <div className="space-y-1.5">
                 <Label>Thương hiệu *</Label>
@@ -378,32 +378,7 @@ function EditProductForm({
                 )}
               </div>
 
-              <div className="space-y-1.5">
-                <Label>Loại sản phẩm *</Label>
-                <Select
-                  // key={`product-type-${field.value}`}
-                  value={productType}
-                  onValueChange={(value) =>
-                    setValue("productType", value, { shouldValidate: true })
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Chọn loại" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {PRODUCT_TYPES.map((t) => (
-                      <SelectItem key={t.value} value={t.value}>
-                        {t.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.productType && (
-                  <p className="text-xs text-destructive">
-                    {errors.productType.message}
-                  </p>
-                )}
-              </div>
+              
             </CardContent>
           </Card>
 
